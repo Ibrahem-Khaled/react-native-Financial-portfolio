@@ -5,6 +5,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../../interfaces/interfaces';
+import CreateGoal from '../Components/CreateGoal';
+import UrIntialAmount from '../Components/UrIntialAmount';
+import TopUp from '../Components/TopUp';
 
 const NewGoal = () => {
     const [goalName, setGoalName] = useState('');
@@ -20,10 +23,22 @@ const NewGoal = () => {
 
     // Function to move to the next step
     const handleNext = () => {
-        if (step < 3 || (step === 2 && isMonthlyDeposit)) {
+        if (step === 2 && !isMonthlyDeposit) {
+            // Skip step 3 if isMonthlyDeposit is false and go directly to step 4
+            const newProgress = Math.min(progress + 1.0, 1); // Full progress for skipping
+            setProgress(newProgress);
+            
+            Animated.timing(progressAnim, {
+                toValue: newProgress,
+                duration: 500,
+                useNativeDriver: false,
+            }).start();
+    
+            navigation.navigate('questions'); // Navigate to the next section directly
+        } else if (step < 3 || (step === 2 && isMonthlyDeposit)) {
             const newProgress = Math.min(progress + 0.50, 1);
             setProgress(newProgress);
-
+    
             Animated.timing(progressAnim, {
                 toValue: newProgress,
                 duration: 500,
@@ -34,6 +49,7 @@ const NewGoal = () => {
             navigation.navigate('questions'); 
         }
     };
+    
 
     // Function to go back to the previous step
     const handleBack = () => {
@@ -94,96 +110,14 @@ const NewGoal = () => {
 
                     {/* Content */}
                     <View style={styles.content}>
-                        {step === 1 && (
-                            <>
-                                <Text style={styles.title}>{goalName === '' ? 'Create a Goal' : goalName}</Text>
-                                <Text style={styles.subtitle}>Write the name of the item or experience you’re saving for.</Text>
-
-                                {image ? (
-                                    <Image source={{ uri: image }} style={styles.imageContainer} />
-                                ) : (
-                                    <LinearGradient colors={['rgba(216, 215, 255, 1)', 'rgba(242, 241, 255, 1)']} style={styles.imageContainer}>
-                                        <TouchableOpacity onPress={() => { }} style={{ padding: 15, backgroundColor: 'rgba(255, 244, 216, 1)', borderRadius: 50 }}>
-                                            <Image source={require('../images/bank.png')} style={{ width: 40, height: 40 }} />
-                                        </TouchableOpacity>
-                                        <Ionicons name="pencil" size={18} color="#625EEE" style={styles.editIcon} />
-                                    </LinearGradient>
-                                )}
-
-                                {/* TextInput for Goal Name */}
-                                <TextInput
-                                    style={styles.input}
-                                    placeholder="Goal Name"
-                                    value={goalName}
-                                    onChangeText={setGoalName}
-                                />
-                            </>
-                        )}
+                        <CreateGoal styles={styles} goalName={goalName} image={image} setGoalName={setGoalName} />
 
                         {step === 2 && (
-                            <>
-                                <Text style={styles.title}>Your Initial amount</Text>
-                                <Text style={styles.subtitle}>
-                                    Enter the amount you will start investing to achieve this goal
-                                </Text>
-
-                                {/* TextInput for Amount */}
-                                <TextInput
-                                    style={styles.input}
-                                    placeholder="Enter amount in AED"
-                                    value={amount}
-                                    onChangeText={setAmount}
-                                    keyboardType="numeric"
-                                />
-
-                                {/* Schedule Monthly Deposit */}
-                                <View style={styles.switchContainer}>
-                                    <Text style={styles.switchLabel}>Schedule a monthly deposit</Text>
-                                    <Switch
-                                        value={isMonthlyDeposit}
-                                        onValueChange={setIsMonthlyDeposit}
-                                        thumbColor={isMonthlyDeposit ? "#625EEE" : "#f4f3f4"}
-                                        trackColor={{ false: "#767577", true: "#D1D1D6" }}
-                                    />
-                                </View>
-
-                                {/* Bank Transfer Notice */}
-                                <View style={styles.noticeContainer}>
-                                    <Ionicons name="information-circle" size={24} color="#625EEE" />
-                                    <Text style={styles.noticeText}>
-                                        All bank transfers will require your explicit confirmation.
-                                    </Text>
-                                </View>
-                            </>
+                          <UrIntialAmount styles={styles} amount={amount} isMonthlyDeposit={isMonthlyDeposit} setAmount={setAmount} setIsMonthlyDeposit={setIsMonthlyDeposit} />
                         )}
 
                         {step === 3 && isMonthlyDeposit && (
-                            <>
-                                <Text style={styles.title}>Your monthly top up</Text>
-                                <Text style={styles.subtitle}>
-                                    We’ll remind you on a monthly basis to add this amount towards your goal.
-                                </Text>
-
-                                {/* TextInput for Monthly Amount */}
-                                <TextInput
-                                    style={styles.input}
-                                    placeholder="Enter amount in AED"
-                                    value={monthlyAmount}
-                                    onChangeText={setMonthlyAmount}
-                                    keyboardType="numeric"
-                                />
-
-                                {/* Dropdown for selecting the day */}
-                                <View style={styles.dropdownContainer}>
-                                    <TextInput
-                                        style={styles.dropdownInput}
-                                        value={selectedDay}
-                                        onChangeText={setSelectedDay}
-                                        keyboardType="numeric"
-                                    />
-                                    <Ionicons name="chevron-down" size={24} color="#625EEE" style={styles.dropdownIcon} />
-                                </View>
-                            </>
+                          <TopUp monthlyAmount={monthlyAmount} styles={styles} selectedDay={selectedDay} setMonthlyAmount={setMonthlyAmount} setSelectedDay={setSelectedDay} />
                         )}
                     </View>
                 </ScrollView>
