@@ -110,7 +110,11 @@ const NewGoal = () => {
 
                     {/* Content */}
                     <View style={styles.content}>
-                        <CreateGoal styles={styles} goalName={goalName} image={image} setGoalName={setGoalName} />
+                        {
+                            step === 1 && 
+                            <CreateGoal styles={styles} goalName={goalName} image={image} setGoalName={setGoalName} />
+                        }
+               
 
                         {step === 2 && (
                           <UrIntialAmount styles={styles} amount={amount} isMonthlyDeposit={isMonthlyDeposit} setAmount={setAmount} setIsMonthlyDeposit={setIsMonthlyDeposit} />

@@ -6,11 +6,11 @@ import { useNavigation , NavigationProp } from '@react-navigation/native';
 import {RootStackParamList} from '../../interfaces/interfaces'
 
 const Questions = () => {
-    const [step, setStep] = useState(0); // لتتبع السؤال الحالي
-    const [progress, setProgress] = useState(0); // لتتبع التقدم
-    const [selectedOption, setSelectedOption] = useState(null); // لتخزين الخيار المختار
+    const [step, setStep] = useState(0); 
+    const [progress, setProgress] = useState(0); 
+    const [selectedOption, setSelectedOption] = useState(null); 
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-    // الأسئلة الممكنة
+  
     const questions = [
         {
             question: 'For how long do you plan to keep investing for this goal?',
@@ -29,17 +29,16 @@ const Questions = () => {
         },
     ];
 
-    // التعامل مع الإجابة
+
     const handleAnswer = (index) => {
-        setSelectedOption(index); // تعيين الخيار المختار
+        setSelectedOption(index); 
     };
 
-    // الانتقال إلى السؤال التالي
     const handleNext = () => {
         if (step < questions.length - 1) {
             setStep(step + 1);
             setProgress((step + 1) / questions.length);
-            setSelectedOption(null); // إعادة تعيين الخيار المختار للسؤال التالي
+            setSelectedOption(null); 
         } else {
             navigation.navigate('userResult');
         }
