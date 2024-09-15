@@ -7,6 +7,7 @@ export const paths = {
     questions : 'questions',
     userResult : 'userResult',
     portfolio : 'ChoosePortfolio',
+    GoalPage : 'GoalPage',
     Explore : 'Explore' ,
     Academy : 'Academy',
     Savings : 'Savings',

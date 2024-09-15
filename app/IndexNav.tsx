@@ -9,6 +9,7 @@ import Questions from './Screens/Questions';
 import UserResult from './Screens/UserResult';
 import { paths } from '../interfaces/Urls';
 import Portfolio from './Screens/Portfolio';
+import GoalPage from './Screens/GoalPage';
 
 const Stack = createNativeStackNavigator();
 
@@ -22,6 +23,7 @@ const IndexNav = () => {
                 <Stack.Screen name={paths.questions} component={Questions} />
                 <Stack.Screen name={paths.userResult} component={UserResult} />
                 <Stack.Screen name={paths.portfolio} component={Portfolio} />
+                <Stack.Screen name={paths.GoalPage} component={GoalPage} />
             </Stack.Navigator>
         </NavigationContainer>
     );
