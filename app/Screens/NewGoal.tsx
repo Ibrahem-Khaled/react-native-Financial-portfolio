@@ -3,19 +3,20 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, Switch, Animated, 
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation , NavigationProp } from '@react-navigation/native';
+import {RootStackParamList} from '../../interfaces/interfaces'
 
 const NewGoal = () => {
     const [goalName, setGoalName] = useState('');
     const [progress, setProgress] = useState(0);
-    const [step, setStep] = useState(1); // الحالة للتحكم في الخطوات
+    const [step, setStep] = useState(1); 
     const [amount, setAmount] = useState('');
-    const [monthlyAmount, setMonthlyAmount] = useState(''); // المبلغ الشهري عند تفعيل السويتش
-    const [selectedDay, setSelectedDay] = useState('1'); // اليوم الشهري
-    const [isMonthlyDeposit, setIsMonthlyDeposit] = useState(false); // سويتش الإيداع الشهري
-    const [image, setImage] = useState(null); // حالة لتخزين الصورة المختارة
+    const [monthlyAmount, setMonthlyAmount] = useState('');
+    const [selectedDay, setSelectedDay] = useState('1'); 
+    const [isMonthlyDeposit, setIsMonthlyDeposit] = useState(false); 
+    const [image, setImage] = useState(null);
     const progressAnim = useRef(new Animated.Value(0)).current;
-    const navigation = useNavigation();
+    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
     // دالة للتقدم إلى الخطوة التالية
     const handleNext = () => {
@@ -30,11 +31,11 @@ const NewGoal = () => {
             }).start();
             setStep(step + 1);
         } else {
-            navigation.navigate('questions'); // الانتقال إلى صفحة الأسئلة إذا انتهت الخطوات
+            navigation.navigate('questions'); 
         }
     };
 
-    // دالة للرجوع إلى الخطوة السابقة
+
     const handleBack = () => {
         if (step > 1) {
             setStep(step - 1);
@@ -49,7 +50,7 @@ const NewGoal = () => {
         }
     };
 
-    // التحقق من تعطيل زر التالي في كل خطوة
+
     const isButtonDisabled = () => {
         if (step === 1) {
             return goalName.trim().length === 0;

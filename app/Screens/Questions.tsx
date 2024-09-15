@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation , NavigationProp } from '@react-navigation/native';
+import {RootStackParamList} from '../../interfaces/interfaces'
 
 const Questions = () => {
     const [step, setStep] = useState(0); // لتتبع السؤال الحالي
     const [progress, setProgress] = useState(0); // لتتبع التقدم
     const [selectedOption, setSelectedOption] = useState(null); // لتخزين الخيار المختار
-    const navigation = useNavigation();
+    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     // الأسئلة الممكنة
     const questions = [
         {

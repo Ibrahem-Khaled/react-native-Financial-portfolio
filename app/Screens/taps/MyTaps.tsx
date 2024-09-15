@@ -2,8 +2,9 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { View, Text } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';  // استيراد أيقونات Expo
+import { Ionicons } from '@expo/vector-icons';  
 import ExploreScreen from './HomeScreen';
+import { paths } from '../../../interfaces/Urls';
 
 const Tab = createBottomTabNavigator();
 const AcademyScreen = () => (
@@ -49,19 +50,19 @@ const MyTaps = () => {
                         iconName = focused ? 'settings' : 'settings-outline';
                     }
 
-                    // إرجاع الأيقونة المناسبة مع Expo Vector Icons
+                   
                     return <Ionicons name={iconName} size={size} color={color} />;
                 },
-                tabBarActiveTintColor: '#625EEE', // لون عند التركيز
-                tabBarInactiveTintColor: 'gray',  // لون عند عدم التركيز
+                tabBarActiveTintColor: '#625EEE', 
+                tabBarInactiveTintColor: 'gray',  
                 headerShown: false
             })}
         >
-            <Tab.Screen name="Explore" component={ExploreScreen} />
-            <Tab.Screen name="Academy" component={AcademyScreen} />
-            <Tab.Screen name="Savings" component={SavingsScreen} />
-            <Tab.Screen name="Services" component={ServicesScreen} />
-            <Tab.Screen name="Settings" component={SettingsScreen} />
+            <Tab.Screen name={paths.Explore} component={ExploreScreen} />
+            <Tab.Screen name={paths.Academy} component={AcademyScreen} />
+            <Tab.Screen name={paths.Savings} component={SavingsScreen} />
+            <Tab.Screen name={paths.Services} component={ServicesScreen} />
+            <Tab.Screen name={paths.Settings} component={SettingsScreen} />
         </Tab.Navigator>
     );
 };
