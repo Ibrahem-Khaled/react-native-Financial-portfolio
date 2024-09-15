@@ -4,6 +4,9 @@ import { AntDesign, Feather, Ionicons } from '@expo/vector-icons';
 import Header from '../../Components/Header';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import ServiceCard from '../../Components/ServiceCard';
+import AcademyCard from '../../Components/AcademyCard';
+import FinancialAcademy from '../../Components/FinancialAcademy';
 
 const services = [
     {
@@ -63,36 +66,12 @@ const academy = [
     }
 ];
 
-const ServiceCard = ({ item }) => (
-    <View style={[styles.serviceCard, { backgroundColor: item.backgroundColor || 'white' }]}>
-        {item.icon && <Ionicons name={item.icon} size={38} color="#625EEE" />}
-        {item.image && <Image source={item.image} style={styles.serviceImage} />}
-        <Text style={[styles.serviceTitle, item.border ? styles.serviceBorder : null]}>{item.title}</Text>
-        {item.description && <Text style={styles.serviceDescription}>{item.description}</Text>}
-        {item.buttonText && (
-            <TouchableOpacity style={styles.requestButton}>
-                <Text style={styles.requestButtonText}>{item.buttonText}</Text>
-            </TouchableOpacity>
-        )}
-    </View>
-);
 
-const AcademyCard = ({ nav, item }) => (
-    <TouchableOpacity onPress={() => nav.navigate('investment')} style={styles.card}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Text style={styles.cardText}>{item.title}</Text>
-            <Image source={item.image} resizeMode="contain" style={{ width: 50, height: 50 }} />
-        </View>
-        <Text style={styles.actionText}>{item.actionText}</Text>
-    </TouchableOpacity>
-);
 
-const FinancialAcademy = ({ item }) => (
-    <ImageBackground source={item.image} style={{ width: 148, height: 203, margin: 10 }} resizeMode="cover" imageStyle={{ borderRadius: 10 }} >
-    </ImageBackground>
-);
 
-const ExploreScreen = () => {
+
+
+const ExploreScreen : React.FC  = () => {
     const navigation = useNavigation();
 
     return (

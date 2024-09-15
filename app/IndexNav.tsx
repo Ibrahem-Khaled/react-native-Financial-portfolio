@@ -7,6 +7,7 @@ import Investment from './Screens/Investment';
 import NewGoal from './Screens/NewGoal';
 import Questions from './Screens/Questions';
 import UserResult from './Screens/UserResult';
+import { paths } from '../interfaces/Urls';
 
 const Stack = createNativeStackNavigator();
 
@@ -14,11 +15,11 @@ const IndexNav = () => {
     return (
         <NavigationContainer>
             <Stack.Navigator screenOptions={{ headerShown: false }}>
-                <Stack.Screen name="myTaps" component={MyTaps} />
-                <Stack.Screen name="investment" component={Investment} />
-                <Stack.Screen name="newGoal" component={NewGoal} />
-                <Stack.Screen name="questions" component={Questions} />
-                <Stack.Screen name="userResult" component={UserResult} />
+                <Stack.Screen name={paths.myTaps} component={MyTaps} />
+                <Stack.Screen name={paths.investment} component={Investment} />
+                <Stack.Screen name={paths.newGoal} component={NewGoal} />
+                <Stack.Screen name={paths.questions} component={Questions} />
+                <Stack.Screen name={paths.userResult} component={UserResult} />
             </Stack.Navigator>
         </NavigationContainer>
     );

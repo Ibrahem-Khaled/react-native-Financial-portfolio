@@ -3,23 +3,20 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation , NavigationProp } from '@react-navigation/native';
+import {RootStackParamList} from '../../interfaces/interfaces'
 
 const InvestmentScreen = () => {
-    const navigation = useNavigation();
+    const navigation  = useNavigation<NavigationProp<RootStackParamList>>();
     return (
         <LinearGradient
-            // إعدادات التدرج اللوني
             colors={['rgba(237, 235, 229, 1)', 'rgba(237, 235, 229, 0)']}
             style={styles.container}
         >
             <SafeAreaView style={{ flex: 1, justifyContent: 'space-between', padding: 20 }}>
-                {/* Close Icon */}
                 <View style={styles.closeIcon}>
                     <Ionicons onPress={() => navigation.goBack()} name="close" size={30} color="black" />
                 </View>
-
-                {/* Investment Content */}
                 <View style={styles.contentContainer}>
                     <View style={styles.iconContainer}>
                         <Text style={styles.emoji}>💰</Text>
@@ -34,7 +31,6 @@ const InvestmentScreen = () => {
                     </Text>
                 </View>
 
-                {/* Button */}
                 <TouchableOpacity onPress={() => {navigation.navigate('newGoal')}} style={styles.button}>
                     <Text style={styles.buttonText}>Start Now</Text>
                 </TouchableOpacity>
