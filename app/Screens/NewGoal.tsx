@@ -1,24 +1,24 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Switch, Animated, Image } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Switch, Animated, Image, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useNavigation , NavigationProp } from '@react-navigation/native';
-import {RootStackParamList} from '../../interfaces/interfaces'
+import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { RootStackParamList } from '../../interfaces/interfaces';
 
 const NewGoal = () => {
     const [goalName, setGoalName] = useState('');
     const [progress, setProgress] = useState(0);
-    const [step, setStep] = useState(1); 
+    const [step, setStep] = useState(1);
     const [amount, setAmount] = useState('');
     const [monthlyAmount, setMonthlyAmount] = useState('');
-    const [selectedDay, setSelectedDay] = useState('1'); 
-    const [isMonthlyDeposit, setIsMonthlyDeposit] = useState(false); 
+    const [selectedDay, setSelectedDay] = useState('1');
+    const [isMonthlyDeposit, setIsMonthlyDeposit] = useState(false);
     const [image, setImage] = useState(null);
     const progressAnim = useRef(new Animated.Value(0)).current;
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
-    // دالة للتقدم إلى الخطوة التالية
+    // Function to move to the next step
     const handleNext = () => {
         if (step < 3 || (step === 2 && isMonthlyDeposit)) {
             const newProgress = Math.min(progress + 0.50, 1);
@@ -35,7 +35,7 @@ const NewGoal = () => {
         }
     };
 
-
+    // Function to go back to the previous step
     const handleBack = () => {
         if (step > 1) {
             setStep(step - 1);
@@ -50,7 +50,7 @@ const NewGoal = () => {
         }
     };
 
-
+    // Button disable logic
     const isButtonDisabled = () => {
         if (step === 1) {
             return goalName.trim().length === 0;
@@ -64,137 +64,144 @@ const NewGoal = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            {/* Close Icon */}
-            <View style={styles.headerContainer}>
-                <TouchableOpacity onPress={handleBack}>
-                    <Ionicons name="arrow-back" size={30} color="black" />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                    <Ionicons onPress={() => navigation.navigate('investment')} name="close" size={30} color="black" />
-                </TouchableOpacity>
-            </View>
+            <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0} // adjust as needed
+            >
+                <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+                    {/* Header */}
+                    <View style={styles.headerContainer}>
+                        <TouchableOpacity onPress={handleBack}>
+                            <Ionicons name="arrow-back" size={30} color="black" />
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <Ionicons onPress={() => navigation.navigate('investment')} name="close" size={30} color="black" />
+                        </TouchableOpacity>
+                    </View>
 
-            {/* Progress Bar */}
-            <View style={styles.progressContainer}>
-                <Animated.View
-                    style={[styles.progressBar, {
-                        width: progressAnim.interpolate({
-                            inputRange: [0, 1],
-                            outputRange: ['0%', '100%']
-                        })
-                    }]}
-                />
-            </View>
+                    {/* Progress Bar */}
+                    <View style={styles.progressContainer}>
+                        <Animated.View
+                            style={[styles.progressBar, {
+                                width: progressAnim.interpolate({
+                                    inputRange: [0, 1],
+                                    outputRange: ['0%', '100%']
+                                })
+                            }]}
+                        />
+                    </View>
 
-            {/* Content */}
-            <View style={styles.content}>
-                {step === 1 && (
-                    <>
-                        <Text style={styles.title}>{goalName === '' ? 'Create a Goal' : goalName}</Text>
-                        <Text style={styles.subtitle}>Write the name of the item or experience you’re saving for.</Text>
+                    {/* Content */}
+                    <View style={styles.content}>
+                        {step === 1 && (
+                            <>
+                                <Text style={styles.title}>{goalName === '' ? 'Create a Goal' : goalName}</Text>
+                                <Text style={styles.subtitle}>Write the name of the item or experience you’re saving for.</Text>
 
-                        {/* Image Section */}
-                        {image ? (
-                            <Image source={{ uri: image }} style={styles.imageContainer} />
-                        ) : (
-                            <LinearGradient colors={['rgba(216, 215, 255, 1)', 'rgba(242, 241, 255, 1)']} style={styles.imageContainer}>
-                                <TouchableOpacity onPress={() => { }} style={{ padding: 15, backgroundColor: 'rgba(255, 244, 216, 1)', borderRadius: 50 }}>
-                                    <Image source={require('../images/bank.png')} style={{ width: 40, height: 40 }} />
-                                </TouchableOpacity>
-                                <Ionicons name="pencil" size={18} color="#625EEE" style={styles.editIcon} />
-                            </LinearGradient>
+                                {image ? (
+                                    <Image source={{ uri: image }} style={styles.imageContainer} />
+                                ) : (
+                                    <LinearGradient colors={['rgba(216, 215, 255, 1)', 'rgba(242, 241, 255, 1)']} style={styles.imageContainer}>
+                                        <TouchableOpacity onPress={() => { }} style={{ padding: 15, backgroundColor: 'rgba(255, 244, 216, 1)', borderRadius: 50 }}>
+                                            <Image source={require('../images/bank.png')} style={{ width: 40, height: 40 }} />
+                                        </TouchableOpacity>
+                                        <Ionicons name="pencil" size={18} color="#625EEE" style={styles.editIcon} />
+                                    </LinearGradient>
+                                )}
+
+                                {/* TextInput for Goal Name */}
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="Goal Name"
+                                    value={goalName}
+                                    onChangeText={setGoalName}
+                                />
+                            </>
                         )}
 
-                        {/* TextInput for Goal Name */}
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Goal Name"
-                            value={goalName}
-                            onChangeText={setGoalName}
-                        />
-                    </>
-                )}
+                        {step === 2 && (
+                            <>
+                                <Text style={styles.title}>Your Initial amount</Text>
+                                <Text style={styles.subtitle}>
+                                    Enter the amount you will start investing to achieve this goal
+                                </Text>
 
-                {step === 2 && (
-                    <>
-                        <Text style={styles.title}>Your Initial amount</Text>
-                        <Text style={styles.subtitle}>
-                            Enter the amount you will start investing to achieve this goal
-                        </Text>
+                                {/* TextInput for Amount */}
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="Enter amount in AED"
+                                    value={amount}
+                                    onChangeText={setAmount}
+                                    keyboardType="numeric"
+                                />
 
-                        {/* TextInput for Amount */}
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Enter amount in AED"
-                            value={amount}
-                            onChangeText={setAmount}
-                            keyboardType="numeric"
-                        />
+                                {/* Schedule Monthly Deposit */}
+                                <View style={styles.switchContainer}>
+                                    <Text style={styles.switchLabel}>Schedule a monthly deposit</Text>
+                                    <Switch
+                                        value={isMonthlyDeposit}
+                                        onValueChange={setIsMonthlyDeposit}
+                                        thumbColor={isMonthlyDeposit ? "#625EEE" : "#f4f3f4"}
+                                        trackColor={{ false: "#767577", true: "#D1D1D6" }}
+                                    />
+                                </View>
 
-                        {/* Schedule Monthly Deposit */}
-                        <View style={styles.switchContainer}>
-                            <Text style={styles.switchLabel}>Schedule a monthly deposit</Text>
-                            <Switch
-                                value={isMonthlyDeposit}
-                                onValueChange={setIsMonthlyDeposit}
-                                thumbColor={isMonthlyDeposit ? "#625EEE" : "#f4f3f4"}
-                                trackColor={{ false: "#767577", true: "#D1D1D6" }}
-                            />
-                        </View>
+                                {/* Bank Transfer Notice */}
+                                <View style={styles.noticeContainer}>
+                                    <Ionicons name="information-circle" size={24} color="#625EEE" />
+                                    <Text style={styles.noticeText}>
+                                        All bank transfers will require your explicit confirmation.
+                                    </Text>
+                                </View>
+                            </>
+                        )}
 
-                        {/* Bank Transfer Notice */}
-                        <View style={styles.noticeContainer}>
-                            <Ionicons name="information-circle" size={24} color="#625EEE" />
-                            <Text style={styles.noticeText}>
-                                All bank transfers will require your explicit confirmation.
-                            </Text>
-                        </View>
-                    </>
-                )}
+                        {step === 3 && isMonthlyDeposit && (
+                            <>
+                                <Text style={styles.title}>Your monthly top up</Text>
+                                <Text style={styles.subtitle}>
+                                    We’ll remind you on a monthly basis to add this amount towards your goal.
+                                </Text>
 
-                {step === 3 && isMonthlyDeposit && (
-                    <>
-                        <Text style={styles.title}>Your monthly top up</Text>
-                        <Text style={styles.subtitle}>
-                            We’ll remind you on a monthly basis to add this amount towards your goal.
-                        </Text>
+                                {/* TextInput for Monthly Amount */}
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="Enter amount in AED"
+                                    value={monthlyAmount}
+                                    onChangeText={setMonthlyAmount}
+                                    keyboardType="numeric"
+                                />
 
-                        {/* TextInput for Monthly Amount */}
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Enter amount in AED"
-                            value={monthlyAmount}
-                            onChangeText={setMonthlyAmount}
-                            keyboardType="numeric"
-                        />
+                                {/* Dropdown for selecting the day */}
+                                <View style={styles.dropdownContainer}>
+                                    <TextInput
+                                        style={styles.dropdownInput}
+                                        value={selectedDay}
+                                        onChangeText={setSelectedDay}
+                                        keyboardType="numeric"
+                                    />
+                                    <Ionicons name="chevron-down" size={24} color="#625EEE" style={styles.dropdownIcon} />
+                                </View>
+                            </>
+                        )}
+                    </View>
+                </ScrollView>
 
-                        {/* Dropdown for selecting the day */}
-                        <View style={styles.dropdownContainer}>
-                            <TextInput
-                                style={styles.dropdownInput}
-                                value={selectedDay}
-                                onChangeText={setSelectedDay}
-                                keyboardType="numeric"
-                            />
-                            <Ionicons name="chevron-down" size={24} color="#625EEE" style={styles.dropdownIcon} />
-                        </View>
-                    </>
-                )}
-            </View>
-
-            {/* Footer */}
-            <View style={styles.footer}>
-                <TouchableOpacity onPress={handleBack}>
-                    <Text style={styles.backText}>Back</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={[styles.forwardButton, isButtonDisabled() && styles.buttonDisabled]}
-                    disabled={isButtonDisabled()}
-                    onPress={handleNext}
-                >
-                    <Ionicons name="arrow-forward" size={24} color="white" />
-                </TouchableOpacity>
-            </View>
+                {/* Footer */}
+                <View style={styles.footer}>
+                    <TouchableOpacity onPress={handleBack}>
+                        <Text style={styles.backText}>Back</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={[styles.forwardButton, isButtonDisabled() && styles.buttonDisabled]}
+                        disabled={isButtonDisabled()}
+                        onPress={handleNext}
+                    >
+                        <Ionicons name="arrow-forward" size={24} color="white" />
+                    </TouchableOpacity>
+                </View>
+            </KeyboardAvoidingView>
         </SafeAreaView>
     );
 };
@@ -249,10 +256,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginVertical: 20,
         alignSelf: 'center',
-    },
-    goalImage: {
-        width: 50,
-        height: 50,
     },
     editIcon: {
         position: 'absolute',
