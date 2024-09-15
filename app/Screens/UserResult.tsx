@@ -138,10 +138,7 @@ const UserResult = () => {
 export default UserResult;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
+  container: {},
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
