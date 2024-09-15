@@ -1,17 +1,21 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, Dimensions, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { VictoryLine, VictoryChart, VictoryTheme, VictoryAxis } from 'victory-native';
+import { LineChart } from 'react-native-chart-kit';
 
 const UserResult = () => {
-  const data = [
-    { x: 1, y: 10000 },
-    { x: 2, y: 11000 },
-    { x: 3, y: 12000 },
-    { x: 4, y: 14000 },
-    { x: 5, y: 13000 },
-    { x: 6, y: 15000 },
-  ];
+  const screenWidth = Dimensions.get('window').width;
+
+  // Data for the line chart
+  const chartData = {
+    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+    datasets: [
+      {
+        data: [10000, 11000, 12000, 14000, 13000, 15000],
+        strokeWidth: 2, // optional
+      },
+    ],
+  };
 
   return (
     <ScrollView style={styles.container}>
@@ -35,49 +39,32 @@ const UserResult = () => {
           <Text style={styles.portfolioTitle}>Growth & Income</Text>
           <Text style={styles.riskLevelText}>Risk level 3</Text>
           <Text style={styles.portfolioDescription}>
-            This portfolio is a typical retirement portfolio, suitable for strategic investors who are willing to tolerate some market risk in search for long term gains, usually with a mid to long term investment time horizon (5-10 years).
+            This portfolio is a typical retirement portfolio, suitable for strategic investors who are willing to tolerate some market risk in search for long-term gains.
           </Text>
         </View>
       </View>
 
-      {/* Tabs */}
-      <ScrollView horizontal style={styles.tabsContainer}>
-        <TouchableOpacity style={styles.tab}>
-          <Text style={styles.tabText}>Income</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.activeTab}>
-          <Text style={styles.activeTabText}>Growth & income</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.tab}>
-          <Text style={styles.tabText}>Growth</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.tab}>
-          <Text style={styles.tabText}>Aggressive</Text>
-        </TouchableOpacity>
-      </ScrollView>
-
-      {/* Risk Limit Slider */}
-      <View style={styles.riskSlider}>
-        <Text style={styles.riskLimitText}>Your Risk Limit</Text>
-        <View style={styles.sliderLine}>
-          <View style={[styles.sliderProgress, { width: '60%' }]} />
-        </View>
-        <Text style={styles.yearsText}>6y</Text>
-      </View>
-
-      {/* Performance Chart using Victory */}
+      {/* Performance Chart using react-native-chart-kit */}
       <View style={styles.chartContainer}>
-        <VictoryChart theme={VictoryTheme.material} domain={{ y: [9000, 16000] }}>
-          <VictoryLine
-            data={data}
-            style={{
-              data: { stroke: '#625EEE' },
-            }}
-          />
-          <VictoryAxis />
-          <VictoryAxis dependentAxis />
-        </VictoryChart>
-        <Text style={styles.chartText}>Performance of USD 10,000 in the past 10 years</Text>
+        <LineChart
+          data={chartData}
+          width={screenWidth - 40} // from Dimensions
+          height={220}
+          chartConfig={{
+            backgroundColor: '#e26a00',
+            backgroundGradientFrom: '#625EEE',
+            backgroundGradientTo: '#ECEAFE',
+            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+            labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+            strokeWidth: 2,
+          }}
+          bezier
+          style={{
+            marginVertical: 8,
+            borderRadius: 16,
+          }}
+        />
+        <Text style={styles.chartText}>Performance of USD 10,000 in the past 6 months</Text>
       </View>
 
       {/* Choose Portfolio Button */}
@@ -181,51 +168,6 @@ const styles = StyleSheet.create({
     color: '#6F6F6F',
   },
   portfolioDescription: {
-    marginTop: 10,
-    color: '#6F6F6F',
-  },
-  tabsContainer: {
-    flexDirection: 'row',
-    padding: 20,
-  },
-  tab: {
-    backgroundColor: '#F3F3F3',
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    borderRadius: 20,
-    marginRight: 10,
-  },
-  activeTab: {
-    backgroundColor: '#625EEE',
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    borderRadius: 20,
-    marginRight: 10,
-  },
-  tabText: {
-    color: '#000',
-  },
-  activeTabText: {
-    color: '#fff',
-  },
-  riskSlider: {
-    padding: 20,
-  },
-  riskLimitText: {
-    color: '#6F6F6F',
-    marginBottom: 5,
-  },
-  sliderLine: {
-    height: 4,
-    backgroundColor: '#ECEAFE',
-    borderRadius: 5,
-  },
-  sliderProgress: {
-    height: 4,
-    backgroundColor: '#625EEE',
-    borderRadius: 5,
-  },
-  yearsText: {
     marginTop: 10,
     color: '#6F6F6F',
   },
