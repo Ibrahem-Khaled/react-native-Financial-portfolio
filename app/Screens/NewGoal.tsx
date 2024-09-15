@@ -20,10 +20,22 @@ const NewGoal = () => {
 
     // Function to move to the next step
     const handleNext = () => {
-        if (step < 3 || (step === 2 && isMonthlyDeposit)) {
+        if (step === 2 && !isMonthlyDeposit) {
+            // Skip step 3 if isMonthlyDeposit is false and go directly to step 4
+            const newProgress = Math.min(progress + 1.0, 1); // Full progress for skipping
+            setProgress(newProgress);
+            
+            Animated.timing(progressAnim, {
+                toValue: newProgress,
+                duration: 500,
+                useNativeDriver: false,
+            }).start();
+    
+            navigation.navigate('questions'); // Navigate to the next section directly
+        } else if (step < 3 || (step === 2 && isMonthlyDeposit)) {
             const newProgress = Math.min(progress + 0.50, 1);
             setProgress(newProgress);
-
+    
             Animated.timing(progressAnim, {
                 toValue: newProgress,
                 duration: 500,
@@ -34,6 +46,7 @@ const NewGoal = () => {
             navigation.navigate('questions'); 
         }
     };
+    
 
     // Function to go back to the previous step
     const handleBack = () => {
