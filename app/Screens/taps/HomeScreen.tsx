@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, ScrollView, ImageBackground } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, ScrollView, ImageBackground , Animated } from 'react-native';
 import { AntDesign, Feather, Ionicons } from '@expo/vector-icons';
 import Header from '../../Components/Header';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -7,86 +7,86 @@ import { useNavigation } from '@react-navigation/native';
 import ServiceCard from '../../Components/ServiceCard';
 import AcademyCard from '../../Components/AcademyCard';
 import FinancialAcademy from '../../Components/FinancialAcademy';
-
-const services = [
-    {
-        id: '1',
-        icon: 'add',
-        title: 'Cash in advance',
-        description: 'You can now avail up to 50% of your total balance.',
-        buttonText: 'Request Cash',
-    },
-    {
-        id: '2',
-        image: require('../../images/car.png'),
-        title: 'Car Insurance',
-        border: true,
-    },
-    {
-        id: '3',
-        image: require('../../images/Rectangle.png'),
-        title: 'Health Insurance',
-        border: true,
-    },
-];
-
-const academyItems = [
-    {
-        id: '1',
-        image: require('../../images/icons/savings2.png'),
-        title: 'Earn daily on your savings!',
-        actionText: 'START SAVING',
-    },
-    {
-        id: '2',
-        image: require('../../images/icons/invetion.png'),
-        title: 'Invest and put your money to work',
-        actionText: 'START INVESTMENT',
-    },
-];
-
-const academy = [
-    {
-        id: '1',
-        image: require('../../images/acadmy1.png'),
-        title: 'Earn daily on your savings!',
-        actionText: 'START SAVING',
-    },
-    {
-        id: '2',
-        image: require('../../images/acadmy2.png'),
-        title: 'Invest and put your money to work',
-        actionText: 'START INVESTMENT',
-    },
-    {
-        id: '3',
-        image: require('../../images/acadmy3.png'),
-        title: 'Earn daily on your savings!',
-        actionText: 'START SAVING',
-    }
-];
-
-
-
-
+import {services , academyItems , academy} from '../../../interfaces/StaticData'
+import { useFormContext } from '../../Store/Store';
 
 
 const ExploreScreen : React.FC  = () => {
-    const navigation = useNavigation();
+    const navigation : any = useNavigation();
+    const [activeIndex, setActiveIndex] = useState(0);
+    const flatListRef = useRef(null);
+    const {updateFormData} = useFormContext()
+    const balanceData = [
+        { id: '1', amount: '10,984', currency: 'AED' },
+        { id: '2', amount: '5,242', currency: 'USD' },
+        { id: '3', amount: '20,180', currency: 'EUR' },
+      ];
+
+      const resetFormData = () => {
+        updateFormData('goalName', '');
+        updateFormData('amount', '');
+        updateFormData('monthlyAmount', '');
+        updateFormData('isMonthlyDeposit', false);
+        updateFormData('selectedDay', '1');
+        updateFormData('step', 1);
+        updateFormData('questionStep', 0);
+        updateFormData('selectedOptions', []);
+    };
+    const handleAcademyCardPress = () => {
+        resetFormData();
+        navigation.navigate('investment')
+    };
+    useEffect(() => {
+      const interval = setInterval(() => {
+        let newIndex = activeIndex === balanceData.length - 1 ? 0 : activeIndex + 1;
+        setActiveIndex(newIndex);
+        flatListRef.current?.scrollToIndex({ index: newIndex, animated: true });
+      }, 3000);
+  
+      return () => clearInterval(interval);
+    }, [activeIndex]);
+  
+    const onViewRef = useRef(({ viewableItems }) => {
+      if (viewableItems.length > 0) {
+        setActiveIndex(viewableItems[0].index);
+      }
+    });
+  
+    const viewConfigRef = useRef({ viewAreaCoveragePercentThreshold: 50 });
 
     return (
         <SafeAreaView style={styles.container}>
             <Header />
             <ScrollView>
                 <Text style={styles.planText}>Gratuity Plan</Text>
+                <FlatList
+        data={balanceData}
+        ref={flatListRef}
+        keyExtractor={(item) => item.id}
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        onViewableItemsChanged={onViewRef.current}
+        viewabilityConfig={viewConfigRef.current}
+        renderItem={({ item }) => (
+          <View style={styles.balanceContainer}>
+            <Text style={styles.balanceText}>
+              {item.amount} <Text style={styles.currencyText}>{item.currency}</Text>
+            </Text>
+          </View>
+        )}
+      />
 
-                {/* Balance Section */}
-                <Text style={styles.balanceText}>10,984 <Text style={styles.currencyText}>AED</Text></Text>
-                <View style={styles.paginationDots}>
-                    <View style={styles.activeDot} />
-                    <View style={styles.inactiveDot} />
-                    <View style={styles.inactiveDot} />
-                </View>
+      {/* Pagination Dots */}
+      <View style={styles.paginationDots}>
+        {balanceData.map((_, i) => (
+          <View
+            key={i}
+            style={i === activeIndex ? styles.activeDot : styles.inactiveDot}
+          />
+        ))}
+      </View>
+
 
                 <View style={styles.contentContainer}>
                     {/* Action Buttons */}
@@ -110,7 +110,7 @@ const ExploreScreen : React.FC  = () => {
                     {/* Academy Section */}
                     <FlatList
                         data={academyItems}
-                        renderItem={({ item }) => <AcademyCard nav={navigation} item={item} />}
+                        renderItem={({ item }) => <AcademyCard nav={handleAcademyCardPress} item={item} />}
                         keyExtractor={(item) => item.id}
                         horizontal
                         showsHorizontalScrollIndicator={false}
@@ -153,6 +153,12 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#625EEE',
     },
+    balanceContainer: {
+        width: 300, // adjust to fit your content width
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginHorizontal: 20,
+      },
     planText: {
         color: 'white',
         fontSize: 18,
@@ -165,6 +171,15 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         margin: 20,
     },
+    checkboxContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 10,
+      },
+      checkboxLabel: {
+        marginLeft: 8,
+        color: 'white',
+      },
     currencyText: {
         fontSize: 18,
         color: 'white',

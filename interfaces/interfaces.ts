@@ -15,7 +15,7 @@ export interface RootStackParamList {
         title: string;
         actionText: string;
     };
-    nav: NavigationProp<any>; 
+    nav: any; 
 }
 
 export interface ServiceCardProps {

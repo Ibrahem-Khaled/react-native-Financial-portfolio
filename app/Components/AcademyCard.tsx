@@ -4,10 +4,10 @@ import { useNavigation, NavigationProp } from '@react-navigation/native';
 import {RootStackParamList} from '../../interfaces/interfaces'
 import {AcademyCardProps} from '../../interfaces/interfaces'
 
-const AcademyCard : React.FC<AcademyCardProps> = ({ item }) => {
+const AcademyCard : React.FC<AcademyCardProps> = ({ item  , nav}) => {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     return (
-        <TouchableOpacity onPress={() => navigation.navigate('investment')} style={styles.card}>
+        <TouchableOpacity onPress={() => nav()} style={styles.card}>
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Text style={styles.cardText}>{item.title}</Text>
                 <Image source={item.image} resizeMode="contain" style={styles.image} />

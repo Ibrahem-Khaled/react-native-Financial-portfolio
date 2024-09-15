@@ -9,12 +9,13 @@ import Questions from './Screens/Questions';
 import UserResult from './Screens/UserResult';
 import { paths } from '../interfaces/Urls';
 import Portfolio from './Screens/Portfolio';
-import GoalPage from './Screens/GoalPage';
+import { FormProvider } from './Store/Store';
 
 const Stack = createNativeStackNavigator();
 
 const IndexNav = () => {
     return (
+        <FormProvider>
         <NavigationContainer>
             <Stack.Navigator screenOptions={{ headerShown: false }}>
                 <Stack.Screen name={paths.myTaps} component={MyTaps} />
@@ -23,9 +24,9 @@ const IndexNav = () => {
                 <Stack.Screen name={paths.questions} component={Questions} />
                 <Stack.Screen name={paths.userResult} component={UserResult} />
                 <Stack.Screen name={paths.portfolio} component={Portfolio} />
-                <Stack.Screen name={paths.GoalPage} component={GoalPage} />
             </Stack.Navigator>
         </NavigationContainer>
+        </FormProvider>
     );
 };
 

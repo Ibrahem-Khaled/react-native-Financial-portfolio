@@ -1,94 +1,107 @@
-import React, { useState, useRef } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Switch, Animated, Image, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Animated, ScrollView, Platform, KeyboardAvoidingView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { LinearGradient } from 'expo-linear-gradient';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
-import { RootStackParamList } from '../../interfaces/interfaces';
+import { useNavigation } from '@react-navigation/native';
+import { useFormContext } from '../Store/Store'; 
 import CreateGoal from '../Components/CreateGoal';
 import UrIntialAmount from '../Components/UrIntialAmount';
 import TopUp from '../Components/TopUp';
+import { paths } from '../../interfaces/Urls';
 
 const NewGoal = () => {
-    const [goalName, setGoalName] = useState('');
-    const [progress, setProgress] = useState(0);
-    const [step, setStep] = useState(1);
-    const [amount, setAmount] = useState('');
-    const [monthlyAmount, setMonthlyAmount] = useState('');
-    const [selectedDay, setSelectedDay] = useState('1');
-    const [isMonthlyDeposit, setIsMonthlyDeposit] = useState(false);
-    const [image, setImage] = useState(null);
-    const progressAnim = useRef(new Animated.Value(0)).current;
-    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+    const { formData, updateFormData } = useFormContext();
+    const [step, setStep] = useState<number>(formData.step || 1);
+    const progressAnim : any = useRef(new Animated.Value(0)).current;
+    const navigation  : any = useNavigation();
 
-    // Function to move to the next step
+    useEffect(() => {
+        // Update the local step state whenever formData.step changes
+        setStep(formData.step || 1);
+    }, [formData.step]);
+
+    useEffect(() => {
+        // Determine the maximum step based on whether monthly deposit is enabled
+        const maxStep = formData.isMonthlyDeposit ? 3 : 2;
+        const progress = step / maxStep;
+
+        // Animate the progress bar to the current step
+        Animated.timing(progressAnim, {
+            toValue: progress,
+            duration: 500,
+            useNativeDriver: false,
+        }).start();
+    }, [step, formData.isMonthlyDeposit, progressAnim]);
+
+   
     const handleNext = () => {
-        if (step === 2 && !isMonthlyDeposit) {
-            // Skip step 3 if isMonthlyDeposit is false and go directly to step 4
-            const newProgress = Math.min(progress + 1.0, 1); // Full progress for skipping
-            setProgress(newProgress);
-            
-            Animated.timing(progressAnim, {
-                toValue: newProgress,
-                duration: 500,
-                useNativeDriver: false,
-            }).start();
-    
-            navigation.navigate('questions'); // Navigate to the next section directly
-        } else if (step < 3 || (step === 2 && isMonthlyDeposit)) {
-            const newProgress = Math.min(progress + 0.50, 1);
-            setProgress(newProgress);
-    
-            Animated.timing(progressAnim, {
-                toValue: newProgress,
-                duration: 500,
-                useNativeDriver: false,
-            }).start();
-            setStep(step + 1);
-        } else {
-            navigation.navigate('questions'); 
-        }
-    };
-    
+        const maxStep = formData.isMonthlyDeposit ? 3 : 2;
+        const newStep = step + 1;
 
-    // Function to go back to the previous step
+        if (newStep > maxStep) {
+            // Navigate to the next screen if all steps are completed
+            navigation.navigate(paths.questions);
+            return;
+        }
+
+        // Update the step in both local state and formData
+        setStep(newStep);
+        updateFormData('step', newStep);
+
+        // Animate the progress bar to the new step
+        const progress = newStep / maxStep;
+        Animated.timing(progressAnim, {
+            toValue: progress,
+            duration: 500,
+            useNativeDriver: false,
+        }).start();
+    };
+
     const handleBack = () => {
         if (step > 1) {
-            setStep(step - 1);
-            const newProgress = Math.max(progress - 0.50, 0);
-            setProgress(newProgress);
+            const newStep = step - 1;
+            setStep(newStep);
+            updateFormData('step', newStep);
 
+            const maxStep = formData.isMonthlyDeposit ? 3 : 2;
+            const progress = newStep / maxStep;
             Animated.timing(progressAnim, {
-                toValue: newProgress,
+                toValue: progress,
                 duration: 500,
                 useNativeDriver: false,
             }).start();
+        } else {
+            // Navigate back to the previous screen if on the first step
+            navigation.goBack();
         }
     };
 
-    // Button disable logic
+
     const isButtonDisabled = () => {
+        const { goalName, amount, monthlyAmount, selectedDay } = formData;
         if (step === 1) {
             return goalName.trim().length === 0;
         } else if (step === 2) {
             return amount.trim().length === 0;
-        } else if (step === 3 && isMonthlyDeposit) {
+        } else if (step === 3 && formData.isMonthlyDeposit) {
             return monthlyAmount.trim().length === 0 || selectedDay.trim().length === 0;
         }
         return false;
     };
+
+    
 
     return (
         <SafeAreaView style={styles.container}>
             <KeyboardAvoidingView
                 style={{ flex: 1 }}
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0} // adjust as needed
+                keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
             >
                 <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
                     {/* Header */}
                     <View style={styles.headerContainer}>
-                        <TouchableOpacity onPress={handleBack}>
+                        <TouchableOpacity>
                             <Ionicons name="arrow-back" size={30} color="black" />
                         </TouchableOpacity>
                         <TouchableOpacity>
@@ -99,30 +112,23 @@ const NewGoal = () => {
                     {/* Progress Bar */}
                     <View style={styles.progressContainer}>
                         <Animated.View
-                            style={[styles.progressBar, {
-                                width: progressAnim.interpolate({
-                                    inputRange: [0, 1],
-                                    outputRange: ['0%', '100%']
-                                })
-                            }]}
+                            style={[
+                                styles.progressBar,
+                                {
+                                    width: progressAnim.interpolate({
+                                        inputRange: [0, 1],
+                                        outputRange: ['0%', '100%'],
+                                    }),
+                                },
+                            ]}
                         />
                     </View>
 
                     {/* Content */}
                     <View style={styles.content}>
-                        {
-                            step === 1 && 
-                            <CreateGoal styles={styles} goalName={goalName} image={image} setGoalName={setGoalName} />
-                        }
-               
-
-                        {step === 2 && (
-                          <UrIntialAmount styles={styles} amount={amount} isMonthlyDeposit={isMonthlyDeposit} setAmount={setAmount} setIsMonthlyDeposit={setIsMonthlyDeposit} />
-                        )}
-
-                        {step === 3 && isMonthlyDeposit && (
-                          <TopUp monthlyAmount={monthlyAmount} styles={styles} selectedDay={selectedDay} setMonthlyAmount={setMonthlyAmount} setSelectedDay={setSelectedDay} />
-                        )}
+                        {step === 1 && <CreateGoal styles={styles} />}
+                        {step === 2 && <UrIntialAmount styles={styles} />}
+                        {step === 3 && formData.isMonthlyDeposit && <TopUp styles={styles} />}
                     </View>
                 </ScrollView>
 
@@ -134,7 +140,7 @@ const NewGoal = () => {
                     <TouchableOpacity
                         style={[styles.forwardButton, isButtonDisabled() && styles.buttonDisabled]}
                         disabled={isButtonDisabled()}
-                        onPress={handleNext}
+                        onPress={handleNext} 
                     >
                         <Ionicons name="arrow-forward" size={24} color="white" />
                     </TouchableOpacity>
@@ -187,7 +193,7 @@ const styles = StyleSheet.create({
         maxWidth: '90%',
     },
     imageContainer: {
-        width: '100%',
+        width: 200,
         height: 160,
         borderRadius: 15,
         justifyContent: 'center',
@@ -210,8 +216,9 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         padding: 15,
         fontSize: 16,
-        marginBottom: 20,
         color: '#625EEE',
+        margin : 'auto',
+        textAlign : 'center'
     },
     switchContainer: {
         flexDirection: 'row',

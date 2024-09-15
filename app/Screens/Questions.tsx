@@ -2,121 +2,118 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation , NavigationProp } from '@react-navigation/native';
-import {RootStackParamList} from '../../interfaces/interfaces'
+import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { useForm, Controller, FormProvider } from 'react-hook-form'; 
+import { RootStackParamList } from '../../interfaces/interfaces';
+import { questions } from '../../interfaces/StaticData';
+import { useFormContext } from '../Store/Store';
 
 const Questions = () => {
-    const [step, setStep] = useState(0); 
-    const [progress, setProgress] = useState(0); 
-    const [selectedOption, setSelectedOption] = useState(null); 
-    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+    const { formData, updateFormData } = useFormContext();
+    const navigation : any = useNavigation();
+    const [progress, setProgress] = useState(0);
   
-    const questions = [
-        {
-            question: 'For how long do you plan to keep investing for this goal?',
-            subText: 'It’s important to understand the time horizon of your investment to provide a suitable portfolio.',
-            options: ['Less than 3 years', '3-5 years', '6-10 years', '+11 years'],
-        },
-        {
-            question: 'For how long do you plan to keep investing for this goal?',
-            subText: 'It’s important to understand the time horizon of your investment to provide a suitable portfolio.',
-            options: ['Growth', 'Income', 'Preservation'],
-        },
-        {
-            question: 'Which of the following investment outcomes do you prefer?',
-            subText: 'Different people have different preferences, understanding yours helps us provide a more suitable portfolio.',
-            options: ['Little or no ups and downs in value, lower returns', 'Moderate ups and downs in value, slightly higher returns ', 'Extreme ups and downs in value, high potential returns'],
-        },
-    ];
-
-
-    const handleAnswer = (index) => {
-        setSelectedOption(index); 
-    };
-
+    const step = formData.questionStep || 0;
+    const selectedOptions = formData.selectedOptions || [];
+  
     const handleNext = () => {
-        if (step < questions.length - 1) {
-            setStep(step + 1);
-            setProgress((step + 1) / questions.length);
-            setSelectedOption(null); 
+        if (step < questions.length) {
+          updateFormData('questionStep', step + 1);
+          setProgress((step + 1) / (questions.length + 1));
         } else {
-            navigation.navigate('userResult');
+          navigation.navigate('userResult');
         }
+      };
+  
+    const handleBack = () => {
+      if (step > 0) {
+        updateFormData('step', step - 1);
+        setProgress(Math.max((step - 1) / (questions.length + 1), 0));
+      }
     };
-
+  
+    const handleOptionSelect = (option) => {
+        const updatedOptions = [...selectedOptions];
+        updatedOptions[step - 1] = option; // Correctly align with question index
+        updateFormData('selectedOptions', updatedOptions);
+      };
+  
+      const isOptionSelected = (option) => {
+        return selectedOptions[step - 1] === option;
+      };
     return (
-        <SafeAreaView style={styles.container}>
-            {/* العنوان وشريط التقدم */}
-            <View style={styles.header}>
-                <TouchableOpacity onPress={() => alert('Back pressed')}>
-                    <Ionicons name="arrow-back" size={30} color="black" />
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => alert('Close pressed')}>
-                    <Ionicons name="close" size={30} color="black" />
-                </TouchableOpacity>
-            </View>
-            <View style={styles.progressContainer}>
-                <View style={[styles.progressBar, { width: `${progress * 100}%` }]} />
-            </View>
-
-            {step === 0 ? (
-                <View style={styles.introContainer}>
-                    <Text style={styles.title}>Understanding your risk profile</Text>
-                    <Text style={styles.subtitle}>
-                        Answer 6 easy questions to help us recommend an investment portfolio suitable for you.
-                    </Text>
-
-                    <Image
-                        source={require('../images/meter.png')} // يمكنك تغيير المسار إلى صورة العداد
-                        style={styles.image}
-                    />
-
-                    <Text style={styles.findText}>Find the suitable portfolio for you</Text>
-
-                    <TouchableOpacity style={styles.startButton} onPress={() => setStep(1)}>
-                        <Text style={styles.startButtonText}>Let’s start</Text>
-                    </TouchableOpacity>
-                </View>
-            ) : (
-                <ScrollView contentContainerStyle={styles.scrollContainer}>
-                    <Text style={styles.questionText}>{questions[step].question}</Text>
-                    <Text style={styles.subText}>
-                        It’s important to understand the time horizon of your investment to provide a suitable portfolio.
-                    </Text>
-                    {questions[step].options.map((option, index) => (
-                        <TouchableOpacity
-                            key={index}
-                            style={[styles.optionButton, selectedOption === index && styles.selectedOption]}
-                            onPress={() => handleAnswer(index)}
-                        >
-                            <Text style={styles.optionText}>{option}</Text>
-                            {selectedOption === index && <Ionicons name="checkmark-circle" size={24} color="#625EEE" />}
-                        </TouchableOpacity>
-                    ))}
-                </ScrollView>
-            )}
-
-            {/* Footer */}
-            {step > 0 && (
-                <View style={styles.footer}>
-                    <TouchableOpacity onPress={() => setStep(Math.max(step - 1, 0))}>
-                        <Text style={styles.backText}>Back</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={[styles.forwardButton, selectedOption === null && styles.buttonDisabled]} // الزر معطل إذا لم يتم اختيار إجابة
-                        onPress={handleNext}
-                        disabled={selectedOption === null} // تعطيل الزر إذا لم يتم اختيار إجابة
-                    >
-                        <Ionicons name="arrow-forward" size={24} color="white" />
-                    </TouchableOpacity>
-                </View>
-            )}
-        </SafeAreaView>
+      <SafeAreaView style={styles.container}>
+        {/* Header and Progress Bar */}
+        <View style={styles.header}>
+          {step > 0 && (
+            <TouchableOpacity onPress={handleBack}>
+              <Ionicons name="arrow-back" size={30} color="black" />
+            </TouchableOpacity>
+          )}
+          <TouchableOpacity onPress={() => navigation.navigate('investment')}>
+            <Ionicons name="close" size={30} color="black" />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.progressContainer}>
+          <View style={[styles.progressBar, { width: `${progress * 100}%` }]} />
+        </View>
+  
+        {step === 0 ? (
+          <View style={styles.introContainer}>
+            <Text style={styles.title}>Understanding your risk profile</Text>
+            <Text style={styles.subtitle}>
+              Answer 6 easy questions to help us recommend an investment portfolio suitable for you.
+            </Text>
+  
+            <Image source={require('../images/meter.png')} style={styles.image} />
+  
+            <Text style={styles.findText}>Find the suitable portfolio for you</Text>
+  
+            <TouchableOpacity style={styles.startButton} onPress={handleNext}>
+              <Text style={styles.startButtonText}>Let’s start</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <ScrollView contentContainerStyle={styles.scrollContainer}>
+            <Text style={styles.questionText}>{questions[step - 1].question}</Text>
+            <Text style={styles.subText}>{questions[step - 1].subText}</Text>
+  
+            {questions[step - 1].options.map((option, index) => (
+              <TouchableOpacity
+                key={index}
+                style={[styles.optionButton, isOptionSelected(option) && styles.selectedOption]}
+                onPress={() => handleOptionSelect(option)}
+              >
+                <Text style={styles.optionText}>{option}</Text>
+                {isOptionSelected(option) && <Ionicons name="checkmark-circle" size={24} color="#625EEE" />}
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        )}
+  
+        {/* Footer */}
+        {step > 0 && (
+          <View style={styles.footer}>
+            <TouchableOpacity onPress={handleBack}>
+              <Text style={styles.backText}>Back</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.forwardButton,
+                !selectedOptions[step - 1] && styles.buttonDisabled,
+              ]}
+              onPress={handleNext}
+              disabled={!selectedOptions[step - 1]}
+            >
+              <Ionicons name="arrow-forward" size={24} color="white" />
+            </TouchableOpacity>
+          </View>
+        )}
+      </SafeAreaView>
     );
-};
-
-export default Questions;
+  };
+  
+  export default Questions;
 
 const styles = StyleSheet.create({
     container: {
