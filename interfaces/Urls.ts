@@ -6,6 +6,7 @@ export const paths = {
     newGoal : 'newGoal',
     questions : 'questions',
     userResult : 'userResult',
+    portfolio : 'ChoosePortfolio',
     Explore : 'Explore' ,
     Academy : 'Academy',
     Savings : 'Savings',
