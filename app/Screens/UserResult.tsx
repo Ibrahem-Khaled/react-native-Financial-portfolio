@@ -4,6 +4,7 @@ import { AntDesign, Ionicons } from '@expo/vector-icons';
 import { LineChart } from 'react-native-chart-kit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import { paths } from '../../interfaces/Urls';
 
 // مكون FactItem
 const FactItem = ({ label, value }) => (
@@ -93,7 +94,7 @@ const UserResult = () => {
         </View>
 
         {/* Choose Portfolio Button */}
-        <TouchableOpacity onPress={() => navigation.navigate('ChoosePortfolio')} style={styles.choosePortfolioButton}>
+        <TouchableOpacity onPress={() => navigation.navigate(paths.portfolio)} style={styles.choosePortfolioButton}>
           <Text style={styles.choosePortfolioButtonText}>Choose Portfolio</Text>
         </TouchableOpacity>
 

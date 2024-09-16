@@ -99,17 +99,15 @@ const NewGoal = () => {
                 keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
             >
                 <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-                    {/* Header */}
                     <View style={styles.headerContainer}>
                         <TouchableOpacity>
                             <Ionicons name="arrow-back" size={30} color="black" />
                         </TouchableOpacity>
                         <TouchableOpacity>
-                            <Ionicons onPress={() => navigation.navigate('investment')} name="close" size={30} color="black" />
+                            <Ionicons onPress={() => navigation.navigate(paths.investment)} name="close" size={30} color="black" />
                         </TouchableOpacity>
                     </View>
 
-                    {/* Progress Bar */}
                     <View style={styles.progressContainer}>
                         <Animated.View
                             style={[
@@ -218,7 +216,8 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#625EEE',
         margin : 'auto',
-        textAlign : 'center'
+        textAlign : 'center',
+        marginBottom : 20
     },
     switchContainer: {
         flexDirection: 'row',

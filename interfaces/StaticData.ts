@@ -1,4 +1,6 @@
-export const services = [
+import {Service , AcademyItem , Question} from './interfaces'
+
+export const services  : Service[] = [
     {
         id: '1',
         icon: 'add',
@@ -20,7 +22,7 @@ export const services = [
     },
 ];
 
-export const academyItems = [
+export const academyItems  : AcademyItem[] = [
     {
         id: '1',
         image: require('../app/images/icons/savings2.png'),
@@ -35,7 +37,7 @@ export const academyItems = [
     },
 ];
 
-export const academy = [
+export const academy : AcademyItem[] = [
     {
         id: '1',
         image: require('../app/images/acadmy1.png'),
@@ -57,7 +59,7 @@ export const academy = [
 ];
 
 
-export  const questions : any= [
+export  const questions : Question[] = [
     {
         question: 'For how long do you plan to keep investing for this goal?',
         subText: 'It’s important to understand the time horizon of your investment to provide a suitable portfolio.',

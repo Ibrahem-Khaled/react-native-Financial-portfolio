@@ -2,10 +2,15 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 
-const Congrats = () => {
+const Congrats: React.FC = () => {
   return (
     <View style={styles.container}>
-      <Animatable.Text animation="bounceIn" iterationCount="infinite" direction="alternate" style={styles.congratsText}>
+      <Animatable.Text
+        animation="bounceIn"
+        iterationCount="infinite"
+        direction="alternate"
+        style={styles.congratsText}
+      >
         Congratulations! 🎉
       </Animatable.Text>
     </View>

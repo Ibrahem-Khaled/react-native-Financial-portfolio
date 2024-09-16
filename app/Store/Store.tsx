@@ -1,16 +1,20 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
+import {FormData , FormContextType , FormProviderProps} from '../../interfaces/interfaces'
 
-// Create a context for the form data
-const FormContext = createContext(null);
 
-// Hook to use the form context (if you prefer)
-export const useFormContext : any = () => {
-    return useContext(FormContext);
+const FormContext = createContext<FormContextType | null>(null);
+
+export const useFormContext = (): FormContextType => {
+    const context = useContext(FormContext);
+    if (!context) {
+        throw new Error("useFormContext must be used within a FormProvider");
+    }
+    return context;
 };
 
-// FormProvider component to wrap around your components
-export const FormProvider = ({ children }) => {
-    const [formData, setFormData] = useState({
+
+export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
+    const [formData, setFormData] = useState<FormData>({
         goalName: '',
         amount: '',
         monthlyAmount: '',
@@ -19,9 +23,11 @@ export const FormProvider = ({ children }) => {
         step: 1,
         questionStep: 0,
         selectedOptions: [], 
+        portfolioChoice : '',
+        agreement : false
     });
 
-    const updateFormData = (field, value) => {
+    const updateFormData = (field: keyof FormData, value: any) => {
         setFormData((prevData) => ({
             ...prevData,
             [field]: value,

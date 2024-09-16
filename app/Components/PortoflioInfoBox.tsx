@@ -1,13 +1,16 @@
-import React from 'react'
-import { Text, TouchableOpacity, View } from 'react-native'
-import { MaterialIcons } from '@expo/vector-icons';
-export default function PortoflioInfoBox({styles  , label , value }) {
+import React from 'react';
+import { Text, View } from 'react-native';
+import {PortoflioInfoBoxProps} from '../../interfaces/interfaces'
+
+const PortoflioInfoBox: React.FC<PortoflioInfoBoxProps> = ({ styles, label, value }) => {
   return (
     <View style={styles.infoBox}>
-    <Text style={styles.infoLabel}>{label}</Text>
-    <View style={styles.infoBoxContent}>
-      <Text style={styles.infoValue}>{value}</Text>
+      <Text style={styles.infoLabel}>{label}</Text>
+      <View style={styles.infoBoxContent}>
+        <Text style={styles.infoValue}>{value}</Text>
+      </View>
     </View>
-  </View>
-  )
-}
+  );
+};
+
+export default PortoflioInfoBox;

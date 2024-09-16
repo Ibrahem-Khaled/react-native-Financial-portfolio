@@ -35,12 +35,5 @@ const IndexNav = () => {
     );
 };
 
-const IndexNavScreen = () => {
-    return (
-        <View>
-            <Text>IndexNav Screen</Text>
-        </View>
-    );
-};
 
 export default IndexNav;

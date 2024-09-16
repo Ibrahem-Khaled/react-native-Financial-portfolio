@@ -1,12 +1,12 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Switch, Text, TextInput, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useFormContext } from '../Store/Store';
+import {UrInitialAmountProps} from '../../interfaces/interfaces'
 
-
-export default function UrInitialAmount({ styles }) {
-  const { formData, updateFormData } = useFormContext(); // Access form data and updater
-  const isMonthlyDeposit = formData.isMonthlyDeposit; // Get 'isMonthlyDeposit' from form data
+const UrInitialAmount: React.FC<UrInitialAmountProps> = ({ styles }) => {
+  const { formData, updateFormData } = useFormContext();
+  const isMonthlyDeposit = formData.isMonthlyDeposit; 
 
   return (
     <View>
@@ -32,8 +32,8 @@ export default function UrInitialAmount({ styles }) {
         <Switch
           value={isMonthlyDeposit}
           onValueChange={(value) => updateFormData('isMonthlyDeposit', value)}
-          thumbColor={isMonthlyDeposit ? "#625EEE" : "#f4f3f4"}
-          trackColor={{ false: "#767577", true: "#D1D1D6" }}
+          thumbColor={isMonthlyDeposit ? '#625EEE' : '#f4f3f4'}
+          trackColor={{ false: '#767577', true: '#D1D1D6' }}
         />
       </View>
 
@@ -46,4 +46,6 @@ export default function UrInitialAmount({ styles }) {
       </View>
     </View>
   );
-}
+};
+
+export default UrInitialAmount;

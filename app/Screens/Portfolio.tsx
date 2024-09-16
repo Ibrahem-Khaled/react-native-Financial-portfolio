@@ -24,7 +24,7 @@ const Portfolio: React.FC = () => {
   useEffect(() => {
     track('Investment Goal Created', {
       goalName: formData.goalName,
-      initialGoalAmount: formData.initialAmount,
+      initialGoalAmount: formData.amount,
       goalDeadline: '2025-12-31',
       chosenPortfolio: formData.selectedOptions,
       paymentRecurrence: 'monthly',
@@ -65,7 +65,7 @@ const Portfolio: React.FC = () => {
       <Text style={styles.sectionTitle}>Goal Summary</Text>
       <PortoflioInfoBox styles={styles}  label="Initial Amount" value={`AED ${initialAmount}`} />
       {monthlyTopUp && <PortoflioInfoBox styles={styles} label="Monthly Top Up" value={`AED ${monthlyTopUp}`} />}
-      <PortoflioInfoBox label="On the day" value={selectedDay} styles={styles} />
+      <PortoflioInfoBox label="months" value={selectedDay} styles={styles} />
       <PortoflioInfoBox styles={styles} label="Portfolio" value={portfolioChoice} />
       <AgreementSectionPortoflio styles={styles} agreement={agreement} handleAgreementChange={handleAgreementChange}  />
       <ButtonSectionPortoflio agreement={agreement} navigation={navigation} styles={styles} handleCreateGoal={handleCreateGoal} />

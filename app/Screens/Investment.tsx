@@ -5,8 +5,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation , NavigationProp } from '@react-navigation/native';
 import {RootStackParamList} from '../../interfaces/interfaces'
+import { paths } from '../../interfaces/Urls';
 
-const InvestmentScreen = () => {
+const InvestmentScreen : React.FC = () => {
     const navigation  = useNavigation<NavigationProp<RootStackParamList>>();
     return (
         <LinearGradient
@@ -31,7 +32,7 @@ const InvestmentScreen = () => {
                     </Text>
                 </View>
 
-                <TouchableOpacity onPress={() => {navigation.navigate('newGoal')}} style={styles.button}>
+                <TouchableOpacity onPress={() => {navigation.navigate(paths.newGoal)}} style={styles.button}>
                     <Text style={styles.buttonText}>Start Now</Text>
                 </TouchableOpacity>
             </SafeAreaView>
@@ -63,7 +64,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     emoji: {
-        fontSize: 40, // حجم الإيموجي الكبير
+        fontSize: 40, 
     },
     title: {
         fontSize: 34,

@@ -2,7 +2,7 @@ import { Image, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { Ionicons } from '@expo/vector-icons'
 
-const Header = () => {
+const Header : React.FC = () => {
     return (
         <View style={styles.header}>
             <Image

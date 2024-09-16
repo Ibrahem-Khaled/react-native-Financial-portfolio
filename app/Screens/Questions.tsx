@@ -2,11 +2,10 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
-import { useForm, Controller, FormProvider } from 'react-hook-form'; 
-import { RootStackParamList } from '../../interfaces/interfaces';
+import { useNavigation } from '@react-navigation/native';
 import { questions } from '../../interfaces/StaticData';
 import { useFormContext } from '../Store/Store';
+import { paths } from '../../interfaces/Urls';
 
 const Questions = () => {
     const { formData, updateFormData } = useFormContext();
@@ -21,7 +20,7 @@ const Questions = () => {
           updateFormData('questionStep', step + 1);
           setProgress((step + 1) / (questions.length + 1));
         } else {
-          navigation.navigate('userResult');
+          navigation.navigate(paths.userResult);
         }
       };
   
@@ -34,7 +33,7 @@ const Questions = () => {
   
     const handleOptionSelect = (option) => {
         const updatedOptions = [...selectedOptions];
-        updatedOptions[step - 1] = option; // Correctly align with question index
+        updatedOptions[step - 1] = option; 
         updateFormData('selectedOptions', updatedOptions);
       };
   
@@ -50,7 +49,7 @@ const Questions = () => {
               <Ionicons name="arrow-back" size={30} color="black" />
             </TouchableOpacity>
           )}
-          <TouchableOpacity onPress={() => navigation.navigate('investment')}>
+          <TouchableOpacity onPress={() => navigation.navigate(paths.investment)}>
             <Ionicons name="close" size={30} color="black" />
           </TouchableOpacity>
         </View>
