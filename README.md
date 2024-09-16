@@ -58,7 +58,7 @@ This architecture ensures:
 
 ```bash
 app/
-  ├── Components/               # UI Components like cards, buttons, and form elements
+  ├── Components/               
   │   ├── AcademyCard.tsx
   │   ├── AgreementSectionPortoflio.tsx
   │   ├── ButtonSectionPortoflio.tsx
@@ -73,21 +73,21 @@ app/
   │   ├── TopUp.tsx
   │   ├── UrIntialAmount.tsx
   │
-  ├── Screens/                  # Screen components (pages)
-  │   ├── taps/                 # Tabbed screens
+  ├── Screens/                  
+  │   ├── taps/                 
   │   │   ├── HomeScreen.tsx
   │   │   ├── MyTaps.tsx
-  │   ├── Investment.tsx        # Main investment page
-  │   ├── NewGoal.tsx           # Goal creation page
-  │   ├── Portfolio.tsx         # Portfolio summary page
-  │   ├── Questions.tsx         # Questionnaires for personalized portfolio
-  │   ├── UserResult.tsx        # User's result based on financial goals
-  │   ├── IndexNav.tsx          # Root navigator for the app
+  │   ├── Investment.tsx       
+  │   ├── NewGoal.tsx          
+  │   ├── Portfolio.tsx        
+  │   ├── Questions.tsx         
+  │   ├── UserResult.tsx      
+  │   ├── IndexNav.tsx          
   │
-  ├── Store/                    # State management using Context API
+  ├── Store/                    
   │   ├── Store.tsx
   │
-  ├── assets/                   # Static assets like images and icons
+  ├── assets/                  
   │   ├── icons/
   │   │   ├── acadmy1.png
   │   │   ├── acadmy2.png
@@ -97,14 +97,14 @@ app/
   │   │   ├── meter.png
   │   │   ├── Rectangle.png
   │
-  ├── interfaces/               # TypeScript types and interfaces for type safety
+  ├── interfaces/               
   │   ├── interfaces.ts
   │   ├── StaticData.ts
   │   ├── Urls.ts
   │
-  ├── App.tsx                   # Entry point of the app
+  ├── App.tsx                  
   ├── package.json
-  ├── tsconfig.json             # TypeScript configuration
+  ├── tsconfig.json           
   └── yarn.lock
 ```
 
