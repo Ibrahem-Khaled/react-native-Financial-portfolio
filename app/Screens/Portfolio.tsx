@@ -1,33 +1,26 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, {useEffect, useState } from 'react';
 import {
-  View,
   Text,
   StyleSheet,
-  TouchableOpacity,
-  Image,
-  Animated,
   Alert,
 } from 'react-native';
-import Checkbox from 'expo-checkbox';
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { paths } from '../../interfaces/Urls';
 import { useFormContext } from '../Store/Store';
 import { useAnalytics } from '@segment/analytics-react-native';
+import PortoflioHeader from '../Components/PortoflioHeader';
+import PortoflioIMageSection from '../Components/PortoflioIMageSection';
+import PortoflioInfoBox from '../Components/PortoflioInfoBox';
+import AgreementSectionPortoflio from '../Components/AgreementSectionPortoflio';
+import ButtonSectionPortoflio from '../Components/ButtonSectionPortoflio';
+import Congrats from '../Components/Congrats';
 
 const Portfolio: React.FC = () => {
   const { formData, updateFormData } = useFormContext();
-  const [loading, setLoading] = useState(false);
+  const [order, setorder] = useState(false)
   const navigation = useNavigation<NavigationProp<any>>();
   const { track } = useAnalytics();
-
-  // Animated values for loading dots
-  const dot1 = useRef(new Animated.Value(0)).current;
-  const dot2 = useRef(new Animated.Value(0)).current;
-  const dot3 = useRef(new Animated.Value(0)).current;
-
-  // Tracking the creation of the investment goal
   useEffect(() => {
     track('Investment Goal Created', {
       goalName: formData.goalName,
@@ -38,46 +31,19 @@ const Portfolio: React.FC = () => {
     });
   }, [formData, track]);
 
-  // Function to animate loading dots
-  const animateDots = () => {
-    Animated.loop(
-      Animated.stagger(200, [
-        Animated.timing(dot1, {
-          toValue: 1,
-          duration: 400,
-          useNativeDriver: true,
-        }),
-        Animated.timing(dot2, {
-          toValue: 1,
-          duration: 400,
-          useNativeDriver: true,
-        }),
-        Animated.timing(dot3, {
-          toValue: 1,
-          duration: 400,
-          useNativeDriver: true,
-        }),
-      ])
-    ).start();
-  };
-
-  // Handle Create Goal action
   const handleCreateGoal = () => {
+    setorder(true)
     if (!formData.agreement) {
       Alert.alert('Agreement Required', 'Please agree to the terms to create a goal.');
       return;
     }
-
-    setLoading(true);
-
-    // Simulate API call and navigation
     setTimeout(() => {
-      setLoading(false);
-      navigation.navigate(paths.myTaps);
-    }, 3000);
+       navigation.navigate(paths.myTaps);
+    }, 1000);
+   
   };
 
-  // Handle Agreement checkbox change
+
   const handleAgreementChange = (value: boolean) => {
     updateFormData('agreement', value);
   };
@@ -91,102 +57,19 @@ const Portfolio: React.FC = () => {
     agreement = false,
   } = formData;
 
-  // Inline components
-
-  const Header = () => (
-    <View style={styles.header}>
-      <TouchableOpacity onPress={navigation.goBack} accessibilityLabel="Close Portfolio">
-        <Ionicons name="close" size={30} color="black" />
-      </TouchableOpacity>
-    </View>
-  );
-
-  const ImageSection = () => (
-    <View style={styles.imageContainer}>
-      <Image
-        source={{
-          uri: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fstatic.vecteezy.com%2Fsystem%2Fresources%2Fpreviews%2F000%2F270%2F486%2Foriginal%2Fvector-online-shopping-web-banner.jpg&f=1&nofb=1&ipt=f548f279d733dd8b330b2c4e142f01624d0060e0c5b13227d7426f181e777066&ipo=images',
-        }}
-        style={styles.image}
-      />
-      <View style={styles.imageTextContainer}>
-        <Text style={styles.imageTitle}>{goalName}</Text>
-      </View>
-    </View>
-  );
-
-  const InfoBox = ({ label, value, hasDropdown }: { label: string; value: string | number; hasDropdown?: boolean }) => (
-    <View style={styles.infoBox}>
-      <Text style={styles.infoLabel}>{label}</Text>
-      <View style={styles.infoBoxContent}>
-        <Text style={styles.infoValue}>{value}</Text>
-        {hasDropdown && (
-          <TouchableOpacity accessibilityLabel={`Select ${label}`}>
-            <MaterialIcons name="arrow-drop-down" size={18} color="black" />
-          </TouchableOpacity>
-        )}
-      </View>
-    </View>
-  );
-
-  const AgreementSection = () => (
-    <View style={styles.agreementContainer}>
-      <Checkbox
-        value={agreement}
-        onValueChange={handleAgreementChange}
-        color={agreement ? '#625EEE' : undefined}
-        accessibilityLabel="Agreement Checkbox"
-      />
-      <Text style={styles.agreementText}>
-        I’ve read and agreed to{' '}
-        <Text
-          style={styles.linkText}
-          onPress={() => Alert.alert('Agreement', 'FinFlx Account Opening Agreement')}
-          accessibilityRole="link"
-        >
-          FinFlx Account Opening Agreement
-        </Text>
-      </Text>
-    </View>
-  );
-
-  const ButtonSection = () => (
-    <View style={styles.buttonContainer}>
-      <TouchableOpacity style={styles.backButton} onPress={navigation.goBack} accessibilityLabel="Back Button">
-        <Text style={styles.backButtonText}>Back</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[styles.createGoalButton, { backgroundColor: agreement ? 'rgba(98, 94, 238, 1)' : 'rgba(233, 233, 233, 1)' }]}
-        disabled={!agreement || loading}
-        onPress={handleCreateGoal}
-        accessibilityLabel="Create Goal Button"
-      >
-        {loading ? (
-          <View style={styles.loadingDots}>
-            <Animated.Text style={{ opacity: dot1, color: 'white', fontSize: 20 }}>•</Animated.Text>
-            <Animated.Text style={{ opacity: dot2, color: 'white', fontSize: 20 }}>•</Animated.Text>
-            <Animated.Text style={{ opacity: dot3, color: 'white', fontSize: 20 }}>•</Animated.Text>
-          </View>
-        ) : (
-          <Text style={[styles.createGoalButtonText, { color: agreement ? 'white' : 'rgba(188, 188, 188, 1)' }]}>
-            Create Goal
-          </Text>
-        )}
-      </TouchableOpacity>
-    </View>
-  );
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header />
-      <ImageSection />
+      <PortoflioHeader styles={styles} navigation={navigation} />
+      <PortoflioIMageSection goalName={goalName} styles={styles} />
       <Text style={styles.sectionTitle}>Goal Summary</Text>
-      <InfoBox label="Initial Amount" value={`AED ${initialAmount}`} />
-      {monthlyTopUp && <InfoBox label="Monthly Top Up" value={`AED ${monthlyTopUp}`} />}
-      <InfoBox label="On the day" value={selectedDay} hasDropdown />
-      <InfoBox label="Portfolio" value={portfolioChoice} />
-      <AgreementSection />
-      <ButtonSection />
+      <PortoflioInfoBox styles={styles}  label="Initial Amount" value={`AED ${initialAmount}`} />
+      {monthlyTopUp && <PortoflioInfoBox styles={styles} label="Monthly Top Up" value={`AED ${monthlyTopUp}`} />}
+      <PortoflioInfoBox label="On the day" value={selectedDay} styles={styles} />
+      <PortoflioInfoBox styles={styles} label="Portfolio" value={portfolioChoice} />
+      <AgreementSectionPortoflio styles={styles} agreement={agreement} handleAgreementChange={handleAgreementChange}  />
+      <ButtonSectionPortoflio agreement={agreement} navigation={navigation} styles={styles} handleCreateGoal={handleCreateGoal} />
+      {order && <Congrats />}
     </SafeAreaView>
   );
 };

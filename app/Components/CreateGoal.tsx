@@ -11,7 +11,8 @@ export default function CreateGoal({ styles }) {
   return (
     <View>
       <Text style={styles.title}>
-        {goalName.trim() !== '' ? goalName : 'Create a Goal'}
+        
+         Create a Goal
       </Text>
       <Text style={styles.subtitle}>
         Write the name of the item or experience you’re saving for.
