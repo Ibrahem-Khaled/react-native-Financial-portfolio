@@ -10,13 +10,6 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ styles }) => {
   const { formData, updateFormData } = useFormContext();
   const goalName = formData.goalName || '';
   const { track } = useAnalytics();
-  useEffect(() => {
-    return () => {
-      track('goal updated' , {
-        goalchoosenNotConfirmed : formData.goalName
-      })
-    }
-  }, [])
   
   return (
     <View>
@@ -43,7 +36,12 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ styles }) => {
           style={styles.input}
           placeholder="Goal Name"
           value={goalName}
-          onChangeText={(text) => updateFormData('goalName', text)}
+          onChangeText={(text) =>{
+            updateFormData('goalName', text)
+            track('goal updated' , {
+              goalchoosenNotConfirmed : formData.goalName
+            })
+          }}
         />
       </View>
     </View>

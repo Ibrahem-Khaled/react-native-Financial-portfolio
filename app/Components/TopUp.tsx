@@ -10,14 +10,6 @@ const TopUp: React.FC<TopUpProps> = ({ styles }) => {
   const days = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
   const data = days.map((day) => ({ key: day, label: `${day}` }));
   const { track } = useAnalytics();
-  useEffect(() => {
-    return () => {
-      track('Top up' , {
-        monthlyAmountchoosenNotConfirmed : formData.monthlyAmount,
-        monthsSelcted : formData.selectedDay
-      })
-    }
-  }, [])
   return (
     <View>
       <Text style={styles.title}>Your monthly top-up</Text>
@@ -29,7 +21,12 @@ const TopUp: React.FC<TopUpProps> = ({ styles }) => {
         style={styles.input}
         placeholder="Enter amount in AED"
         value={formData.monthlyAmount}
-        onChangeText={(text) => updateFormData('monthlyAmount', text)}
+        onChangeText={(text) =>{updateFormData('monthlyAmount', text)
+          track('Top up' , {
+            monthlyAmountchoosenNotConfirmed : text,
+          })
+
+        }}
         keyboardType="numeric"
       />
 

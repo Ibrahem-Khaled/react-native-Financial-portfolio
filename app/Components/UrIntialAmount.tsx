@@ -9,13 +9,6 @@ const UrInitialAmount: React.FC<UrInitialAmountProps> = ({ styles }) => {
   const { formData, updateFormData } = useFormContext();
   const isMonthlyDeposit = formData.isMonthlyDeposit; 
   const { track } = useAnalytics();
-  useEffect(() => {
-    return () => {
-      track('Monthly Deposit update' , {
-        MonthlyDepositchoosenNotConfirmed : isMonthlyDeposit
-      })
-    }
-  }, [])
   return (
     <View>
       <Text style={styles.title}>Your Initial Amount</Text>
@@ -37,7 +30,12 @@ const UrInitialAmount: React.FC<UrInitialAmountProps> = ({ styles }) => {
        
         <Switch
           value={isMonthlyDeposit}
-          onValueChange={(value) => updateFormData('isMonthlyDeposit', value)}
+          onValueChange={(value) => {
+            updateFormData('isMonthlyDeposit', value)
+            track('goal updated' , {
+              goalchoosenNotConfirmed : value
+            })
+          }}
           thumbColor={isMonthlyDeposit ? '#625EEE' : '#f4f3f4'}
           trackColor={{ false: '#767577', true: '#D1D1D6' }}
         />
