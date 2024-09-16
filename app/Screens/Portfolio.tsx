@@ -1,4 +1,3 @@
-// Portfolio.tsx
 import React, { useRef, useState, useEffect } from 'react';
 import {
   View,
@@ -22,19 +21,22 @@ const Portfolio: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation<NavigationProp<any>>();
   const { track } = useAnalytics();
+
   // Animated values for loading dots
   const dot1 = useRef(new Animated.Value(0)).current;
   const dot2 = useRef(new Animated.Value(0)).current;
   const dot3 = useRef(new Animated.Value(0)).current;
 
-
-  track('Investment Goal Created', {
-    goalName: formData.goalName,               
-    initialGoalAmount: formData.initialAmount,  
-    goalDeadline: '2025-12-31',        
-    chosenPortfolio: formData.selectedOptions,  
-    paymentRecurrence: 'monthly',      
-  });
+  // Tracking the creation of the investment goal
+  useEffect(() => {
+    track('Investment Goal Created', {
+      goalName: formData.goalName,
+      initialGoalAmount: formData.initialAmount,
+      goalDeadline: '2025-12-31',
+      chosenPortfolio: formData.selectedOptions,
+      paymentRecurrence: 'monthly',
+    });
+  }, [formData, track]);
 
   // Function to animate loading dots
   const animateDots = () => {
@@ -59,34 +61,14 @@ const Portfolio: React.FC = () => {
     ).start();
   };
 
-  // Start or reset animations based on loading state
-  useEffect(() => {
-    if (loading) {
-      animateDots();
-    } else {
-      // Reset dots when not loading
-      Animated.timing(dot1, { toValue: 0, duration: 0, useNativeDriver: true }).start();
-      Animated.timing(dot2, { toValue: 0, duration: 0, useNativeDriver: true }).start();
-      Animated.timing(dot3, { toValue: 0, duration: 0, useNativeDriver: true }).start();
-    }
-
-    // Cleanup animation on unmount
-    return () => {
-      dot1.stopAnimation();
-      dot2.stopAnimation();
-      dot3.stopAnimation();
-    };
-  }, [loading, dot1, dot2, dot3]);
-
   // Handle Create Goal action
   const handleCreateGoal = () => {
-    if (!agreement) {
+    if (!formData.agreement) {
       Alert.alert('Agreement Required', 'Please agree to the terms to create a goal.');
       return;
     }
 
     setLoading(true);
-    animateDots();
 
     // Simulate API call and navigation
     setTimeout(() => {
@@ -95,16 +77,10 @@ const Portfolio: React.FC = () => {
     }, 3000);
   };
 
-  // Handle Back action
-  const handleBack = () => {
-    navigation.goBack();
-  };
-
   // Handle Agreement checkbox change
   const handleAgreementChange = (value: boolean) => {
     updateFormData('agreement', value);
   };
-
 
   const {
     goalName = 'Home Deposit',
@@ -115,16 +91,16 @@ const Portfolio: React.FC = () => {
     agreement = false,
   } = formData;
 
-  // Inline Header Component
+  // Inline components
+
   const Header = () => (
     <View style={styles.header}>
-      <TouchableOpacity onPress={handleBack} accessibilityLabel="Close Portfolio">
+      <TouchableOpacity onPress={navigation.goBack} accessibilityLabel="Close Portfolio">
         <Ionicons name="close" size={30} color="black" />
       </TouchableOpacity>
     </View>
   );
 
-  // Inline Image Section Component
   const ImageSection = () => (
     <View style={styles.imageContainer}>
       <Image
@@ -139,17 +115,7 @@ const Portfolio: React.FC = () => {
     </View>
   );
 
-  const InfoBox = ({
-    label,
-    value,
-    onEdit,
-    hasDropdown,
-  }: {
-    label: string;
-    value: string | number;
-    onEdit?: () => void;
-    hasDropdown?: boolean;
-  }) => (
+  const InfoBox = ({ label, value, hasDropdown }: { label: string; value: string | number; hasDropdown?: boolean }) => (
     <View style={styles.infoBox}>
       <Text style={styles.infoLabel}>{label}</Text>
       <View style={styles.infoBoxContent}>
@@ -163,27 +129,6 @@ const Portfolio: React.FC = () => {
     </View>
   );
 
-  // Inline Recurring Payment Section Component
-  const RecurringPaymentSection = () => (
-    <View style={styles.recurringPaymentContainer}>
-      <Text style={styles.sectionTitle}>Recurring Payment</Text>
-      <Text style={styles.infoDescription}>You will be able to change this later</Text>
-      <InfoBox
-        label="Monthly Top Up"
-        value={`AED ${monthlyTopUp}`}
-      />
-    </View>
-  );
-
-  // Inline Investment Choice Section Component
-  const InvestmentChoiceSection = () => (
-    <View>
-      <Text style={styles.sectionTitle}>Investment Choice</Text>
-      <InfoBox label="Portfolio" value={portfolioChoice} />
-    </View>
-  );
-
-  // Inline Agreement Section Component
   const AgreementSection = () => (
     <View style={styles.agreementContainer}>
       <Checkbox
@@ -205,46 +150,25 @@ const Portfolio: React.FC = () => {
     </View>
   );
 
-  // Inline Button Section Component
   const ButtonSection = () => (
     <View style={styles.buttonContainer}>
-      <TouchableOpacity
-        style={styles.backButton}
-        onPress={handleBack}
-        accessibilityLabel="Back Button"
-      >
+      <TouchableOpacity style={styles.backButton} onPress={navigation.goBack} accessibilityLabel="Back Button">
         <Text style={styles.backButtonText}>Back</Text>
       </TouchableOpacity>
       <TouchableOpacity
-        style={[
-          styles.createGoalButton,
-          {
-            backgroundColor: agreement ? 'rgba(98, 94, 238, 1)' : 'rgba(233, 233, 233, 1)',
-          },
-        ]}
+        style={[styles.createGoalButton, { backgroundColor: agreement ? 'rgba(98, 94, 238, 1)' : 'rgba(233, 233, 233, 1)' }]}
         disabled={!agreement || loading}
         onPress={handleCreateGoal}
         accessibilityLabel="Create Goal Button"
       >
         {loading ? (
           <View style={styles.loadingDots}>
-            <Animated.Text style={{ opacity: dot1, color: 'white', fontSize: 20 }}>
-              •
-            </Animated.Text>
-            <Animated.Text style={{ opacity: dot2, color: 'white', fontSize: 20 }}>
-              •
-            </Animated.Text>
-            <Animated.Text style={{ opacity: dot3, color: 'white', fontSize: 20 }}>
-              •
-            </Animated.Text>
+            <Animated.Text style={{ opacity: dot1, color: 'white', fontSize: 20 }}>•</Animated.Text>
+            <Animated.Text style={{ opacity: dot2, color: 'white', fontSize: 20 }}>•</Animated.Text>
+            <Animated.Text style={{ opacity: dot3, color: 'white', fontSize: 20 }}>•</Animated.Text>
           </View>
         ) : (
-          <Text
-            style={[
-              styles.createGoalButtonText,
-              { color: agreement ? 'white' : 'rgba(188, 188, 188, 1)' },
-            ]}
-          >
+          <Text style={[styles.createGoalButtonText, { color: agreement ? 'white' : 'rgba(188, 188, 188, 1)' }]}>
             Create Goal
           </Text>
         )}
@@ -254,38 +178,14 @@ const Portfolio: React.FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
       <Header />
-
-      {/* Image with Title */}
       <ImageSection />
-
-      {/* Goal Summary Section */}
       <Text style={styles.sectionTitle}>Goal Summary</Text>
-      <InfoBox
-        label="Initial Amount"
-        value={`AED ${initialAmount}`}
-        onEdit={() => Alert.alert('Edit', 'Edit Initial Amount')}
-      />
-
-      {/* Recurring Payment Section */}
-      {!monthlyTopUp == false && <RecurringPaymentSection />}
-
-      {/* On the Day Section */}
-      <InfoBox
-        label="On the day"
-        value={selectedDay}
-        hasDropdown
-        onEdit={() => Alert.alert('Select Day', 'Select On the Day')}
-      />
-
-      {/* Investment Choice Section */}
-      <InvestmentChoiceSection />
-
-      {/* Agreement Section */}
+      <InfoBox label="Initial Amount" value={`AED ${initialAmount}`} />
+      {monthlyTopUp && <InfoBox label="Monthly Top Up" value={`AED ${monthlyTopUp}`} />}
+      <InfoBox label="On the day" value={selectedDay} hasDropdown />
+      <InfoBox label="Portfolio" value={portfolioChoice} />
       <AgreementSection />
-
-      {/* Buttons Section */}
       <ButtonSection />
     </SafeAreaView>
   );
@@ -299,14 +199,12 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: '#fff',
   },
-  // Header Styles
   header: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center',
     marginBottom: 10,
   },
-  // Image Section Styles
   imageContainer: {
     position: 'relative',
     marginBottom: 20,
@@ -328,15 +226,12 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 20,
     fontWeight: 'bold',
-    marginRight: 10,
   },
-  // Section Title Styles
   sectionTitle: {
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 10,
   },
-  // InfoBox Styles
   infoBox: {
     backgroundColor: '#F7F7F7',
     borderRadius: 10,
@@ -356,15 +251,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  // Recurring Payment Styles
-  recurringPaymentContainer: {
-    marginBottom: 10,
-  },
-  infoDescription: {
-    color: '#8E8E8E',
-    marginBottom: 10,
-  },
-  // Agreement Section Styles
   agreementContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -378,7 +264,6 @@ const styles = StyleSheet.create({
     color: '#625EEE',
     textDecorationLine: 'underline',
   },
-  // Button Section Styles
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
