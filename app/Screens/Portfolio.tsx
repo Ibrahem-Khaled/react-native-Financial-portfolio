@@ -15,16 +15,26 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { paths } from '../../interfaces/Urls';
 import { useFormContext } from '../Store/Store';
+import { useAnalytics } from '@segment/analytics-react-native';
 
 const Portfolio: React.FC = () => {
   const { formData, updateFormData } = useFormContext();
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation<NavigationProp<any>>();
-
+  const { track } = useAnalytics();
   // Animated values for loading dots
   const dot1 = useRef(new Animated.Value(0)).current;
   const dot2 = useRef(new Animated.Value(0)).current;
   const dot3 = useRef(new Animated.Value(0)).current;
+
+
+  track('Investment Goal Created', {
+    goalName: formData.goalName,               
+    initialGoalAmount: formData.initialAmount,  
+    goalDeadline: '2025-12-31',        
+    chosenPortfolio: formData.selectedOptions,  
+    paymentRecurrence: 'monthly',      
+  });
 
   // Function to animate loading dots
   const animateDots = () => {

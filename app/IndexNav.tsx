@@ -10,11 +10,15 @@ import UserResult from './Screens/UserResult';
 import { paths } from '../interfaces/Urls';
 import Portfolio from './Screens/Portfolio';
 import { FormProvider } from './Store/Store';
-
+import { createClient , AnalyticsProvider } from '@segment/analytics-react-native';
 const Stack = createNativeStackNavigator();
 
 const IndexNav = () => {
+    const analysis   = createClient({
+        writeKey: 'OPFR44LgJYIABrG3dCwLTVKE676KcZbV',  
+      });
     return (
+        <AnalyticsProvider client={analysis}>
         <FormProvider>
         <NavigationContainer>
             <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -27,6 +31,7 @@ const IndexNav = () => {
             </Stack.Navigator>
         </NavigationContainer>
         </FormProvider>
+        </AnalyticsProvider>
     );
 };
 
