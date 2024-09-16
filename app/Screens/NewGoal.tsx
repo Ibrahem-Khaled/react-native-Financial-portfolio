@@ -39,16 +39,11 @@ const NewGoal = () => {
         const newStep = step + 1;
 
         if (newStep > maxStep) {
-            // Navigate to the next screen if all steps are completed
             navigation.navigate(paths.questions);
             return;
         }
-
-        // Update the step in both local state and formData
         setStep(newStep);
         updateFormData('step', newStep);
-
-        // Animate the progress bar to the new step
         const progress = newStep / maxStep;
         Animated.timing(progressAnim, {
             toValue: progress,

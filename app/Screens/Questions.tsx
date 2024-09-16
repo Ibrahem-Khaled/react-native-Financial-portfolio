@@ -26,7 +26,7 @@ const Questions = () => {
   
     const handleBack = () => {
       if (step > 0) {
-        updateFormData('step', step - 1);
+        updateFormData('questionStep', step - 1);
         setProgress(Math.max((step - 1) / (questions.length + 1), 0));
       }
     };
@@ -42,7 +42,6 @@ const Questions = () => {
       };
     return (
       <SafeAreaView style={styles.container}>
-        {/* Header and Progress Bar */}
         <View style={styles.header}>
           {step > 0 && (
             <TouchableOpacity onPress={handleBack}>
@@ -90,7 +89,6 @@ const Questions = () => {
           </ScrollView>
         )}
   
-        {/* Footer */}
         {step > 0 && (
           <View style={styles.footer}>
             <TouchableOpacity onPress={handleBack}>
