@@ -37,7 +37,7 @@ const InvestmentScreen : React.FC = () => {
                 <TouchableOpacity onPress={() => {
                     navigation.navigate(paths.newGoal)
                     track('start invest')
-                    }} style={styles.button}>
+                    }} style={styles.button}  >
                     <Text style={styles.buttonText}>Start Now</Text>
                 </TouchableOpacity>
             </SafeAreaView>

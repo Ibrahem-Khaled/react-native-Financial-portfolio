@@ -31,7 +31,6 @@ const AllocationItem = ({ label, name, percentage, color }) => (
 const UserResult = () => {
   const screenWidth = Dimensions.get('window').width;
   const navigation = useNavigation<any>();
-  // Data for the line chart
   const chartData = {
     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
     datasets: [
@@ -45,7 +44,6 @@ const UserResult = () => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView style={styles.container}>
-        {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity>
             <Ionicons name="arrow-back" size={24} color="black" />
@@ -56,7 +54,6 @@ const UserResult = () => {
           </TouchableOpacity>
         </View>
 
-        {/* Growth & Income Section */}
         <View style={styles.portfolioInfo}>
           <View style={styles.riskLevel}>
             <Text style={styles.riskLevelNumber}>3</Text>
@@ -92,17 +89,16 @@ const UserResult = () => {
           />
           <Text style={styles.chartText}>Performance of USD 10,000 in the past 6 months</Text>
         </View>
-
-        {/* Choose Portfolio Button */}
         <TouchableOpacity onPress={() => navigation.navigate(paths.portfolio)} style={styles.choosePortfolioButton}>
           <Text style={styles.choosePortfolioButtonText}>Choose Portfolio</Text>
         </TouchableOpacity>
-
-        <Text style={{}}>Growth & Income Portfolio</Text>
-        <Text style={{}}>Risk Level 3/5</Text>
+        <View style={styles.portfolioDescription}>
+        <Text>Growth & Income Portfolio</Text>
+        <Text>Risk Level 3/5</Text>
         <Text style={styles.allocationDetails}>40% fixed income, 60% equities</Text>
+        </View>
 
-        {/* Allocation List */}
+
         <View style={styles.allocationContainer}>
           <AllocationItem label="BND" name="Vanguard Total World Stock Index Fund ETF" percentage="20%" color="#C0C0C0" />
           <AllocationItem label="BNDX" name="Vanguard Total World Stock Index Fund ETF" percentage="20%" color="#C0C0C0" />

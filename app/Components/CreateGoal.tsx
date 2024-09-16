@@ -13,7 +13,7 @@ const CreateGoal: React.FC<CreateGoalProps> = ({ styles }) => {
   useEffect(() => {
     return () => {
       track('goal updated' , {
-        goalchoosenNotConfirmed : goalName
+        goalchoosenNotConfirmed : formData.goalName
       })
     }
   }, [])
