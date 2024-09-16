@@ -1,14 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Image, Text, TouchableOpacity, TextInput, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useFormContext } from '../Store/Store';
 import {CreateGoalProps} from '../../interfaces/interfaces'
+import { useAnalytics } from '@segment/analytics-react-native';
 
 const CreateGoal: React.FC<CreateGoalProps> = ({ styles }) => {
   const { formData, updateFormData } = useFormContext();
   const goalName = formData.goalName || '';
-
+  const { track } = useAnalytics();
+  useEffect(() => {
+    return () => {
+      track('goal updated' , {
+        goalchoosenNotConfirmed : goalName
+      })
+    }
+  }, [])
+  
   return (
     <View>
       <Text style={styles.title}>Create a Goal</Text>

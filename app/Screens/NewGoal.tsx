@@ -16,16 +16,12 @@ const NewGoal = () => {
     const navigation  : any = useNavigation();
 
     useEffect(() => {
-        // Update the local step state whenever formData.step changes
         setStep(formData.step || 1);
     }, [formData.step]);
 
     useEffect(() => {
-        // Determine the maximum step based on whether monthly deposit is enabled
         const maxStep = formData.isMonthlyDeposit ? 3 : 2;
         const progress = step / maxStep;
-
-        // Animate the progress bar to the current step
         Animated.timing(progressAnim, {
             toValue: progress,
             duration: 500,

@@ -6,9 +6,11 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation , NavigationProp } from '@react-navigation/native';
 import {RootStackParamList} from '../../interfaces/interfaces'
 import { paths } from '../../interfaces/Urls';
+import { useAnalytics } from '@segment/analytics-react-native';
 
 const InvestmentScreen : React.FC = () => {
     const navigation  = useNavigation<NavigationProp<RootStackParamList>>();
+     const { track } = useAnalytics();
     return (
         <LinearGradient
             colors={['rgba(237, 235, 229, 1)', 'rgba(237, 235, 229, 0)']}
@@ -32,7 +34,10 @@ const InvestmentScreen : React.FC = () => {
                     </Text>
                 </View>
 
-                <TouchableOpacity onPress={() => {navigation.navigate(paths.newGoal)}} style={styles.button}>
+                <TouchableOpacity onPress={() => {
+                    navigation.navigate(paths.newGoal)
+                    track('start invest')
+                    }} style={styles.button}>
                     <Text style={styles.buttonText}>Start Now</Text>
                 </TouchableOpacity>
             </SafeAreaView>
