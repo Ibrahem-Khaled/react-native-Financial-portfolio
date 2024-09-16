@@ -105,7 +105,7 @@ const Portfolio: React.FC = () => {
     updateFormData('agreement', value);
   };
 
-  // Access data from formData with default values
+
   const {
     goalName = 'Home Deposit',
     amount: initialAmount = '100,000',
@@ -171,7 +171,6 @@ const Portfolio: React.FC = () => {
       <InfoBox
         label="Monthly Top Up"
         value={`AED ${monthlyTopUp}`}
-        onEdit={() => Alert.alert('Edit', 'Edit Monthly Top Up')}
       />
     </View>
   );
