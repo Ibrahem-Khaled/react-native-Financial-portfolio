@@ -142,30 +142,18 @@ app/
 To set up the project on your local machine, follow these steps:
 
 1. **Clone the repository**:
-   \`\`\`bash
+   ```bash
    git clone https://github.com/yourusername/fintech-app.git
    cd fintech-app
-   \`\`\`
+   ```
 
 2. **Install dependencies**:
-   \`\`\`bash
+   ```bash
    yarn install
-   \`\`\`
+   ```
 
 3. **Start the app**:
    - Yarn start
 
 ---
 
-## Usage
-
-1. **Creating a Goal**:
-   - Navigate to the "New Goal" screen.
-   - Fill out the form with details like goal name, initial amount, and monthly top-up.
-   - Select a suitable portfolio based on the provided options.
-
-2. **Viewing Portfolio**:
-   - After creating a goal, the user is taken to the portfolio screen where they can see the breakdown of their investment plan.
-
-3. **Tracking Progress**:
-   - The app uses Segment Analytics to track user progress and investments, providing insights on goal creation and updates.
