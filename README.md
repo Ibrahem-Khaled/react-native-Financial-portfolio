@@ -56,7 +56,6 @@ This architecture ensures:
 
 ## Folder Structure
 
-\`\`\`bash
 app/
   ├── Components/               # UI Components like cards, buttons, and form elements
   │   ├── AcademyCard.tsx
