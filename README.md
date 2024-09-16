@@ -56,56 +56,57 @@ This architecture ensures:
 
 ## Folder Structure
 
+```bash
 app/
-├── Components/               # UI Components like cards, buttons, and form elements
-│   ├── AcademyCard.tsx
-│   ├── AgreementSectionPortoflio.tsx
-│   ├── ButtonSectionPortoflio.tsx
-│   ├── Congrats.tsx
-│   ├── CreateGoal.tsx
-│   ├── FinancialAcademy.tsx
-│   ├── Header.tsx
-│   ├── PortoflioHeader.tsx
-│   ├── PortoflioIMageSection.tsx
-│   ├── PortoflioInfoBox.tsx
-│   ├── ServiceCard.tsx
-│   ├── TopUp.tsx
-│   ├── UrIntialAmount.tsx
-│
-├── Screens/                  # Screen components (pages)
-│   ├── taps/                 # Tabbed screens
-│   │   ├── HomeScreen.tsx
-│   │   ├── MyTaps.tsx
-│   ├── Investment.tsx        # Main investment page
-│   ├── NewGoal.tsx           # Goal creation page
-│   ├── Portfolio.tsx         # Portfolio summary page
-│   ├── Questions.tsx         # Questionnaires for personalized portfolio
-│   ├── UserResult.tsx        # User's result based on financial goals
-│   ├── IndexNav.tsx          # Root navigator for the app
-│
-├── Store/                    # State management using Context API
-│   ├── Store.tsx
-│
-├── assets/                   # Static assets like images and icons
-│   ├── icons/
-│   │   ├── acadmy1.png
-│   │   ├── acadmy2.png
-│   │   ├── acadmy3.png
-│   │   ├── bank.png
-│   │   ├── car.png
-│   │   ├── meter.png
-│   │   ├── Rectangle.png
-│
-├── interfaces/               # TypeScript types and interfaces for type safety
-│   ├── interfaces.ts
-│   ├── StaticData.ts
-│   ├── Urls.ts
-│
-├── App.tsx                   # Entry point of the app
-├── package.json
-├── tsconfig.json             # TypeScript configuration
-└── yarn.lock
-
+  ├── Components/               # UI Components like cards, buttons, and form elements
+  │   ├── AcademyCard.tsx
+  │   ├── AgreementSectionPortoflio.tsx
+  │   ├── ButtonSectionPortoflio.tsx
+  │   ├── Congrats.tsx
+  │   ├── CreateGoal.tsx
+  │   ├── FinancialAcademy.tsx
+  │   ├── Header.tsx
+  │   ├── PortoflioHeader.tsx
+  │   ├── PortoflioIMageSection.tsx
+  │   ├── PortoflioInfoBox.tsx
+  │   ├── ServiceCard.tsx
+  │   ├── TopUp.tsx
+  │   ├── UrIntialAmount.tsx
+  │
+  ├── Screens/                  # Screen components (pages)
+  │   ├── taps/                 # Tabbed screens
+  │   │   ├── HomeScreen.tsx
+  │   │   ├── MyTaps.tsx
+  │   ├── Investment.tsx        # Main investment page
+  │   ├── NewGoal.tsx           # Goal creation page
+  │   ├── Portfolio.tsx         # Portfolio summary page
+  │   ├── Questions.tsx         # Questionnaires for personalized portfolio
+  │   ├── UserResult.tsx        # User's result based on financial goals
+  │   ├── IndexNav.tsx          # Root navigator for the app
+  │
+  ├── Store/                    # State management using Context API
+  │   ├── Store.tsx
+  │
+  ├── assets/                   # Static assets like images and icons
+  │   ├── icons/
+  │   │   ├── acadmy1.png
+  │   │   ├── acadmy2.png
+  │   │   ├── acadmy3.png
+  │   │   ├── bank.png
+  │   │   ├── car.png
+  │   │   ├── meter.png
+  │   │   ├── Rectangle.png
+  │
+  ├── interfaces/               # TypeScript types and interfaces for type safety
+  │   ├── interfaces.ts
+  │   ├── StaticData.ts
+  │   ├── Urls.ts
+  │
+  ├── App.tsx                   # Entry point of the app
+  ├── package.json
+  ├── tsconfig.json             # TypeScript configuration
+  └── yarn.lock
+```
 
 ### Explanation of Folders:
 
