@@ -2,18 +2,19 @@ import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated, ScrollView, Platform, KeyboardAvoidingView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { useFormContext } from '../Store/Store'; 
 import CreateGoal from '../Components/CreateGoal';
 import UrIntialAmount from '../Components/UrIntialAmount';
 import TopUp from '../Components/TopUp';
 import { paths } from '../../interfaces/Urls';
+import { RootStackParamList } from '../../interfaces/interfaces';
 
 const NewGoal = () => {
     const { formData, updateFormData } = useFormContext();
     const [step, setStep] = useState<number>(formData.step || 1);
     const progressAnim : any = useRef(new Animated.Value(0)).current;
-    const navigation  : any = useNavigation();
+    const navigation   = useNavigation<NavigationProp<RootStackParamList>>();
 
     useEffect(() => {
         setStep(formData.step || 1);
